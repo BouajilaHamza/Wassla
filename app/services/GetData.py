@@ -2,7 +2,8 @@ import pandas as pd
 from requests import Request, Session
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
-
+import logging
+import datetime
 def GetLatest():
   url = 'https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest'
   parameters = {
@@ -87,7 +88,8 @@ def Streaming():
         "PercentChange24h" :None,
         "PercentChange7d" :None,
         "MarketCap" :None,
-        "LastUpdated" :None
+        "LastUpdated" :None,
+        "RealTime": None
     }
     for i in range(len(categories['data'])):
         ID = categories['data'][i]['id']
@@ -107,6 +109,8 @@ def Streaming():
                     Dict["PercentChange7d"] =  map['data']['coins'][0]["quote"]["USD"]['percent_change_7d']
                     Dict["MarketCap"] = map['data']['coins'][0]["quote"]["USD"]['market_cap']
                     Dict["LastUpdated"] = map['data']['coins'][0]["quote"]["USD"]['last_updated']
+                    Dict["RealTime"] = datetime.datetime.now()
                     DATA.append(Dict)
-        except:
+        except Exception as e:
+            logging.error(e)
             continue  
