@@ -1,9 +1,6 @@
-from app.api.api_v1.handlers import Dashboard
-from fastapi import APIRouter, Depends, HTTPException, status
-from app.api.api_v1.handlers import *
-# from app.services.course_service import *
+from fastapi import APIRouter
+from app.api.api_v1.handlers.authentication import auth_router
 
 router = APIRouter()
 
-router.include_router(Dashboard.Dashboard_router, 
-                      prefix="/Dashboard", tags=["Dashboard"])
+router.include_router(auth_router, prefix="/auth", tags=["Authentication"])
