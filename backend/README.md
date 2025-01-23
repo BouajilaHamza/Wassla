@@ -15,7 +15,7 @@ Wassla is a backend service designed to provide comprehensive API functionalitie
 
 - Python 3.7+
 - FastAPI
-- Other dependencies listed in `requirements.txt`
+- Other dependencies listed in `uv` configuration
 
 ## Installation
 
@@ -25,15 +25,14 @@ Wassla is a backend service designed to provide comprehensive API functionalitie
     cd wassla-backend
     ```
 
-2. Create a virtual environment and activate it:
+2. Install `uv` if you haven't already:
     ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    pip install uv
     ```
 
-3. Install the dependencies:
+3. Use `uv` to set up the environment and install dependencies:
     ```bash
-    pip install -r requirements.txt
+    uv setup
     ```
 
 ## Configuration
