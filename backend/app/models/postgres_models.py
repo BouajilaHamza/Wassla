@@ -1,10 +1,11 @@
-from sqlalchemy import Column, Integer, String
-from backend.app.database.postgres_db import Base
+from sqlmodel import SQLModel,Field
+from typing import Optional
+from pydantic import EmailStr
 
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    email = Column(String, unique=True, index=True)
-    password = Column(String)
+class User(SQLModel, table=True):
+ 
+    id: Optional[int] = Field(default_factory=int,primary_key=True,index=True)
+    username: str 
+    email: EmailStr
+    password: str
+    full_name: Optional[str] = None
