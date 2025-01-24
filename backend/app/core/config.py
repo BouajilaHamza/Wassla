@@ -8,9 +8,13 @@ class Settings(BaseSettings):
    
     SECRET_KEY: str = config("SECRET_KEY",cast=str)
     ALGORITHM : str = config("ALGORITHM",cast=str)
+    
     NEO4J_URI: str = config("NEO4J_URI",cast=str)
-    NEO4J_USER: str = config("NEO4J_USER",cast=str)
+    NEO4J_USERNAME: str = config("NEO4J_USERNAME",cast=str)
     NEO4J_PASSWORD: str = config("NEO4J_PASSWORD",cast=str)
+    AURA_INSTANCEID: str = config("AURA_INSTANCEID",cast=str)
+    AURA_INSTANCENAME:str = config("AURA_INSTANCENAME",cast=str)
+
     DATABASE_URL: str = config("DATABASE_URL", cast=str)
 
     
