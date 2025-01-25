@@ -58,6 +58,7 @@ dependencies = [
     { name = "gunicorn" },
     { name = "kafka" },
     { name = "neo4j" },
+    { name = "neomodel" },
     { name = "numpy" },
     { name = "passlib" },
     { name = "psycopg2-binary" },
@@ -79,6 +80,7 @@ requires-dist = [
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "kafka", specifier = ">=1.3.5" },
     { name = "neo4j", specifier = ">=5.27.0" },
+    { name = "neomodel", specifier = ">=5.4.2" },
     { name = "numpy", specifier = ">=2.2.1" },
     { name = "passlib", specifier = ">=1.7.4" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
@@ -438,6 +440,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/9c/b6/31ed9f3df8b948aecd31952193b803cd2007551f2f81aaa60d264e8d1950/neo4j-5.27.0.tar.gz", hash = "sha256:f82ee807cd15b178898d83f41a66372e11719a25dd487fd7bea48fd4b7323765", size = 223803 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f7/9a/cec819e5887804896db67b13215682b15e6f9201d9cf63890fee2b9a29e9/neo4j-5.27.0-py3-none-any.whl", hash = "sha256:929c14b9e5341267324eca170b39d1798b032bffacc26a0529eacaf678ae483f", size = 301679 },
+]
+
+[[package]]
+name = "neomodel"
+version = "5.4.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "neo4j" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a9/f5/99d00b6cb4d65a30b852c6c56a388522410e46f8ca8dd15418055e01c05c/neomodel-5.4.2.tar.gz", hash = "sha256:2d1b09ed6f22142ef745eb90c00345f6df1bf7b97d1534ee2ce31d39fdce0ca9", size = 190891 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/59/e6/e9c7bec0c008d62557448a182987f51de014768282eb2395011b577db50a/neomodel-5.4.2-py3-none-any.whl", hash = "sha256:2909cb2c8efb0cc402d40a7a2575c576041218d824d875c2848a6e7335576e63", size = 225703 },
 ]
 
 [[package]]
