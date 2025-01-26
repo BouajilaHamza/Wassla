@@ -1,23 +1,20 @@
-from jose import jwt
-from sqlmodel import Session, select
-from passlib.context import CryptContext
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
+from jose import jwt
+from passlib.context import CryptContext
+from sqlmodel import Session, select
 
-from backend.app.models.postgres_models import User
-from backend.app.database.postgres_db import get_session
-from backend.app.schemas.auth_schemas import Token
 from backend.app.core.config import settings
-
-
+from backend.app.database.postgres_db import get_session
+from backend.app.models.neo4j_models import User as NeoUser
+from backend.app.models.postgres_models import User
+from backend.app.schemas.auth_schemas import Token
 
 auth_router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-
-
-@auth_router.post("/signup",response_model=User)
+@auth_router.post("/signup", response_model=User)
 async def signup(user: User, session: Session = Depends(get_session)):
     # Check if email or username already exists
     if session.exec(select(User).where(User.email == user.email)).first():
@@ -29,13 +26,19 @@ async def signup(user: User, session: Session = Depends(get_session)):
     session.add(user)
     session.commit()
     session.refresh(user)
+    neo_user = NeoUser.nodes.get_or_none(user_id=user.id)
+    if not neo_user:
+        neo_user = NeoUser(user_id=user.id, username=user.username, email=user.email)
+        neo_user.save()
 
     return {"message": "User created successfully", "id": user.id}
 
 
-
 @auth_router.post("/login", response_model=Token)
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session)):
+async def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    session: Session = Depends(get_session),
+):
     # Fetch user by email
     user = session.exec(select(User).where(User.username == form_data.username)).first()
 
@@ -48,9 +51,8 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), session: Sessi
 
     # Generate JWT token
     token_data = {"sub": user.email}
-    access_token = jwt.encode(token_data, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    access_token = jwt.encode(
+        token_data, settings.SECRET_KEY, algorithm=settings.ALGORITHM
+    )
 
     return {"access_token": access_token, "token_type": "bearer"}
-
-
-
