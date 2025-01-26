@@ -42,6 +42,7 @@ class Location(BaseModel):
 
 
 class PostCreate(BaseModel):
+    post_id: Optional[UUID] = None
     user_id: UUID
     content: str = Field(
         ..., max_length=500, description="Description or details of the issue."

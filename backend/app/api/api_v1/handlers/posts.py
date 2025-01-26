@@ -26,6 +26,7 @@ async def create_post(post: PostCreate):
     )
 
     new_post = Post(
+        post_id=post.post_id,
         content=post.content,
         bus_number=post.bus_number,
         issue_type=str(post.issue_type.value),
