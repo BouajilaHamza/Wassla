@@ -56,6 +56,6 @@ class Post(StructuredNode):
 class Comment(StructuredNode):
     comment_id = UniqueIdProperty()
     content = StringProperty(required=True)
-    created_at = DateTimeProperty()
+    created_at = DateTimeProperty(default_now=True)
     user = RelationshipFrom("User", "COMMENTS_ON")
     post = RelationshipTo("Post", "COMMENTS_ON")
