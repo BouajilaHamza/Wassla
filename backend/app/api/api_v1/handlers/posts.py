@@ -1,4 +1,5 @@
 from typing import List, Optional
+from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
 from neomodel.contrib.spatial_properties import NeomodelPoint
@@ -25,7 +26,6 @@ async def create_post(post: PostCreate):
     )
 
     new_post = Post(
-        post_id=post.post_id,
         content=post.content,
         bus_number=post.bus_number,
         issue_type=str(post.issue_type.value),
@@ -48,7 +48,7 @@ async def create_post(post: PostCreate):
 
 
 @posts_router.get("/get/{post_id}/", response_model=PostResponse)
-async def get_post(post_id: int):
+async def get_post(post_id: UUID):
     post = Post.nodes.get_or_none(post_id=post_id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
@@ -63,7 +63,7 @@ async def get_post(post_id: int):
 
 
 @posts_router.get("/get/{user_id}", response_model=List[PostResponse])
-async def list_posts(user_id: Optional[int] = None):
+async def list_posts(user_id: Optional[UUID] = None):
     if user_id:
         user = User.nodes.get_or_none(user_id=user_id)
         if not user:
@@ -84,7 +84,7 @@ async def list_posts(user_id: Optional[int] = None):
 
 
 @posts_router.put("/update/{post_id}/", response_model=PostResponse)
-async def update_post(post_id: int, post_update: PostUpdate):
+async def update_post(post_id: UUID, post_update: PostUpdate):
     post = Post.nodes.get_or_none(post_id=post_id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
@@ -103,7 +103,7 @@ async def update_post(post_id: int, post_update: PostUpdate):
 
 
 @posts_router.delete("/delete/{post_id}/", status_code=204)
-async def delete_post(post_id: int):
+async def delete_post(post_id: UUID):
     post = Post.nodes.get_or_none(post_id=post_id)
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")

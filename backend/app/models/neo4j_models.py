@@ -6,6 +6,7 @@ from neomodel import (
     RelationshipTo,
     StringProperty,
     StructuredNode,
+    UniqueIdProperty,
     config,
 )
 from neomodel.contrib.spatial_properties import PointProperty
@@ -16,7 +17,7 @@ config.DATABASE_URL = settings.NEOMODEL_URL
 
 
 class User(StructuredNode):
-    user_id = IntegerProperty(unique_index=True, required=True)
+    user_id = UniqueIdProperty()
     username = StringProperty(unique_index=True, required=True)
     email = StringProperty(unique_index=True, required=True)
     posts = RelationshipTo("Post", "POSTS")
@@ -25,7 +26,7 @@ class User(StructuredNode):
 
 
 class Post(StructuredNode):
-    post_id = IntegerProperty(unique_index=True, required=True)
+    post_id = UniqueIdProperty()
     content = StringProperty(required=True)
     bus_number = StringProperty()  # Bus number or route ID (optional)
     issue_type = StringProperty(required=True)  # Type of issue (Delay, Accident, etc.)
@@ -53,7 +54,7 @@ class Post(StructuredNode):
 
 
 class Comment(StructuredNode):
-    comment_id = IntegerProperty(unique_index=True, required=True)
+    comment_id = UniqueIdProperty()
     content = StringProperty(required=True)
     created_at = DateTimeProperty()
     user = RelationshipFrom("User", "COMMENTS_ON")
