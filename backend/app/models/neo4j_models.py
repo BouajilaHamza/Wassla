@@ -59,3 +59,10 @@ class Comment(StructuredNode):
     created_at = DateTimeProperty(default_now=True)
     user = RelationshipFrom("User", "COMMENTS_ON")
     post = RelationshipTo("Post", "COMMENTS_ON")
+
+
+class Like(StructuredNode):
+    like_id = UniqueIdProperty()
+    created_at = DateTimeProperty(default_now=True)
+    user = RelationshipFrom("User", "LIKES")
+    post = RelationshipTo("Post", "LIKES")
