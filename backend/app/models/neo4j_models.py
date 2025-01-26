@@ -1,12 +1,14 @@
 from neomodel import (
     DateTimeProperty,
     IntegerProperty,
+    Relationship,
     RelationshipFrom,
     RelationshipTo,
     StringProperty,
     StructuredNode,
     config,
 )
+from neomodel.contrib.spatial_properties import PointProperty
 
 from backend.app.core.config import settings
 
@@ -25,7 +27,27 @@ class User(StructuredNode):
 class Post(StructuredNode):
     post_id = IntegerProperty(unique_index=True, required=True)
     content = StringProperty(required=True)
-    created_at = DateTimeProperty()
+    bus_number = StringProperty()  # Bus number or route ID (optional)
+    issue_type = StringProperty(required=True)  # Type of issue (Delay, Accident, etc.)
+    delay_duration = IntegerProperty()  # Delay in minutes (optional)
+    expected_arrival = DateTimeProperty()  # When the transport is expected (optional)
+    severity_level = StringProperty(
+        choices={
+            "Low": "Low",
+            "Medium": "Medium",
+            "High": "High",
+            "Critical": "Critical",
+        }
+    )  # Severity of the issue
+    status = StringProperty(
+        default="Open",
+        choices={"Open": "Open", "In Progress": "In Progress", "Resolved": "Resolved"},
+    )  # Current status of the post
+    location = PointProperty(crs="wgs-84")  # Location of the issue
+    created_at = DateTimeProperty(default_now=True)  # When the post was created
+
+    # Relationships
+    reported_by = Relationship("User", "REPORTED_BY")  # Who reported the issue
     user = RelationshipFrom("User", "POSTS")
     liked_by = RelationshipFrom("User", "LIKES")
 

@@ -1,6 +1,8 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, HTTPException
+from neomodel.contrib.spatial_properties import NeomodelPoint
+from shapely.geometry import Point
 
 from backend.app.models.neo4j_models import Post, User
 from backend.app.schemas.posts_schemas import PostCreate, PostResponse, PostUpdate
@@ -13,8 +15,26 @@ async def create_post(post: PostCreate):
     user = User.nodes.get_or_none(user_id=post.user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+
+    location = (
+        NeomodelPoint(
+            Point(post.location.longitude, post.location.latitude), crs="wgs-84"
+        )
+        if post.location
+        else None
+    )
+
     new_post = Post(
-        content=post.content, created_at=post.created_at, post_id=post.post_id
+        post_id=post.post_id,
+        content=post.content,
+        bus_number=post.bus_number,
+        issue_type=str(post.issue_type.value),
+        delay_duration=post.delay_duration,
+        expected_arrival=post.expected_arrival,
+        severity_level=str(post.severity_level.value),
+        status=str(post.status.value),
+        location=location,
+        created_at=post.created_at,
     )
     new_post.save()
     user.posts.connect(new_post)
