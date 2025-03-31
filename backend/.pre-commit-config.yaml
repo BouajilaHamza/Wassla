@@ -1,0 +1,73 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-added-large-files
+    -   id: check-merge-conflict
+    -   id: check-case-conflict
+    -   id: check-json
+    -   id: detect-private-key
+    -   id: debug-statements
+    -   id: no-commit-to-branch
+
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+  # Ruff version.
+    rev: v0.7.2
+    hooks:
+      # Run the linter.
+      - id: ruff
+      # Run the formatter.
+      - id: ruff-format
+
+
+  # bandit: Checks for common security issues in Python code.
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.4
+    hooks:
+      - id: bandit
+        args: ["--exclude", "tests"]
+
+
+  #isort: Sorts Python imports according to the defined style, in this case, the "black" profile to make in compatible with the black hook above.
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [ "--profile", "black" ]
+
+
+  #pycln: Removes all unused import statements. Be wild, live a little!
+  - repo: https://github.com/hadialqattan/pycln
+    rev: v2.4.0
+    hooks:
+      - id: pycln
+        args: [--all]
+
+  #yesqa: Automatically removes unnecessary # noqa comments.
+  - repo: https://github.com/asottile/yesqa
+    rev: v1.5.0
+    hooks:
+      - id: yesqa
+        additional_dependencies: &flake8_deps
+          - flake8-bugbear==22.8.23
+          - flake8-comprehensions==3.10.0
+          - flake8-docstrings==1.6.0
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v3.30.0
+    hooks:
+      - id: commitizen
+      - id: commitizen-branch
+        stages: [pre-push]
+
+
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: 'v1.13.0'  # Use the sha / tag you want to point at
+  #   hooks:
+  #   -   id: mypy
+  #       additional_dependencies: [types-requests]
