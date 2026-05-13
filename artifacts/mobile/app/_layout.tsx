@@ -17,6 +17,7 @@ import { setBaseUrl } from "@workspace/api-client-react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuthProvider } from "@/context/AuthContext";
 import { TrackingProvider } from "@/context/TrackingContext";
+import { requestNotificationPermissions } from "@/hooks/useNotifications";
 
 setBaseUrl(`https://${process.env.EXPO_PUBLIC_DOMAIN}`);
 
@@ -46,6 +47,8 @@ export default function RootLayout() {
   useEffect(() => {
     if (fontsLoaded || fontError) {
       SplashScreen.hideAsync();
+      // Request notification permission after fonts load
+      requestNotificationPermissions();
     }
   }, [fontsLoaded, fontError]);
 

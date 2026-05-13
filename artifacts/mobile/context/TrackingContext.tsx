@@ -11,6 +11,11 @@ import React, {
 import { Platform } from "react-native";
 import { usePostLocation } from "@workspace/api-client-react";
 import { useAuth } from "./AuthContext";
+import {
+  notifyBusConfirmed,
+  notifyClusterDetected,
+  notifyDismissed,
+} from "@/hooks/useNotifications";
 
 interface LocationData {
   lat: number;
@@ -33,6 +38,7 @@ interface TrackingContextValue {
 
 const TrackingContext = createContext<TrackingContextValue | null>(null);
 const QUEUE_KEY = "helfer_ping_queue";
+const POINTS_KEY = "helfer_user_points";
 
 function getAdaptiveInterval(speedMs: number): number {
   if (speedMs > 5) return 5000;
@@ -49,31 +55,35 @@ export function TrackingProvider({ children }: { children: React.ReactNode }) {
   const watchRef = useRef<Location.LocationSubscription | null>(null);
   const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSpeedRef = useRef(0);
+  const notifiedClusterRef = useRef<string | null>(null);
 
   const { mutate: postLocation } = usePostLocation();
 
-  const flushQueue = useCallback(async (userId: string) => {
-    try {
-      const raw = await AsyncStorage.getItem(QUEUE_KEY);
-      if (!raw) return;
-      const queue: LocationData[] = JSON.parse(raw);
-      if (queue.length === 0) return;
-      await AsyncStorage.removeItem(QUEUE_KEY);
-      for (const loc of queue) {
-        postLocation({
-          data: {
-            userId,
-            lat: loc.lat,
-            lng: loc.lng,
-            speed: loc.speed,
-            accuracy: loc.accuracy,
-            heading: loc.heading,
-            timestamp: loc.timestamp,
-          },
-        });
-      }
-    } catch {}
-  }, [postLocation]);
+  const flushQueue = useCallback(
+    async (userId: string) => {
+      try {
+        const raw = await AsyncStorage.getItem(QUEUE_KEY);
+        if (!raw) return;
+        const queue: LocationData[] = JSON.parse(raw);
+        if (queue.length === 0) return;
+        await AsyncStorage.removeItem(QUEUE_KEY);
+        for (const loc of queue) {
+          postLocation({
+            data: {
+              userId,
+              lat: loc.lat,
+              lng: loc.lng,
+              speed: loc.speed,
+              accuracy: loc.accuracy,
+              heading: loc.heading,
+              timestamp: loc.timestamp,
+            },
+          });
+        }
+      } catch {}
+    },
+    [postLocation],
+  );
 
   const sendPing = useCallback(
     (loc: LocationData, userId: string) => {
@@ -94,8 +104,14 @@ export function TrackingProvider({ children }: { children: React.ReactNode }) {
             if (data.inCluster && data.clusterId && !pendingClusterId) {
               setInCluster(true);
               setPendingClusterId(data.clusterId);
+              // Fire local notification only once per cluster
+              if (notifiedClusterRef.current !== data.clusterId) {
+                notifiedClusterRef.current = data.clusterId;
+                notifyClusterDetected(data.clusterId);
+              }
             } else if (!data.inCluster) {
               setInCluster(false);
+              notifiedClusterRef.current = null;
             }
           },
           onError: async () => {
@@ -203,15 +219,23 @@ export function TrackingProvider({ children }: { children: React.ReactNode }) {
   const dismissCluster = useCallback(() => {
     setInCluster(false);
     setPendingClusterId(null);
+    notifyDismissed();
   }, []);
 
-  const confirmCluster = useCallback(
-    (_isBus: boolean) => {
-      setInCluster(false);
-      setPendingClusterId(null);
-    },
-    [],
-  );
+  const confirmCluster = useCallback(async (isBus: boolean) => {
+    setInCluster(false);
+    setPendingClusterId(null);
+    notifiedClusterRef.current = null;
+    if (isBus) {
+      try {
+        const raw = await AsyncStorage.getItem(POINTS_KEY);
+        const pts = raw ? parseInt(raw, 10) : 0;
+        await notifyBusConfirmed(pts + 10);
+      } catch {}
+    } else {
+      notifyDismissed();
+    }
+  }, []);
 
   return (
     <TrackingContext.Provider
