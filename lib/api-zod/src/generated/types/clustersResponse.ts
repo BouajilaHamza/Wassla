@@ -5,7 +5,8 @@
  * Helfer API - community-powered bus detection
  * OpenAPI spec version: 0.1.0
  */
+import type { BusCluster } from "./busCluster";
 
-export interface HealthStatus {
-  status: string;
+export interface ClustersResponse {
+  clusters: BusCluster[];
 }

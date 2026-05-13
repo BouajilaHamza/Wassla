@@ -3,13 +3,19 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Helfer API - community-powered bus detection
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: location
+    description: GPS location tracking
+  - name: clusters
+    description: Bus cluster detection
+  - name: user
+    description: User management
 paths:
   /healthz:
     get:
@@ -24,6 +30,96 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /location:
+    post:
+      operationId: postLocation
+      tags: [location]
+      summary: Submit GPS location ping
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LocationPing"
+      responses:
+        "200":
+          description: Location received
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LocationResponse"
+        "400":
+          description: Invalid payload
+
+  /clusters:
+    get:
+      operationId: getClusters
+      tags: [clusters]
+      summary: Get active bus clusters
+      responses:
+        "200":
+          description: List of active clusters
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClustersResponse"
+
+  /cluster/confirm:
+    post:
+      operationId: confirmCluster
+      tags: [clusters]
+      summary: User confirms if they are on a bus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClusterConfirmation"
+      responses:
+        "200":
+          description: Confirmation received
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmResponse"
+        "400":
+          description: Invalid payload
+
+  /user/points:
+    get:
+      operationId: getUserPoints
+      tags: [user]
+      summary: Get user reward points
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User points
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserPoints"
+        "404":
+          description: User not found
+
+  /admin/stats:
+    get:
+      operationId: getAdminStats
+      tags: [user]
+      summary: Admin debug stats
+      responses:
+        "200":
+          description: Debug statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +130,144 @@ components:
       required:
         - status
 
+    LocationPing:
+      type: object
+      properties:
+        userId:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        speed:
+          type: number
+        accuracy:
+          type: number
+        heading:
+          type: number
+        timestamp:
+          type: number
+        batteryLevel:
+          type: number
+      required:
+        - userId
+        - lat
+        - lng
+        - speed
+        - accuracy
+        - heading
+        - timestamp
+
+    LocationResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        points:
+          type: number
+        inCluster:
+          type: boolean
+        clusterId:
+          type: string
+      required:
+        - ok
+        - points
+        - inCluster
+
+    BusCluster:
+      type: object
+      properties:
+        clusterId:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        avgSpeed:
+          type: number
+        confidence:
+          type: number
+        estimatedPassengers:
+          type: number
+        heading:
+          type: number
+        updatedAt:
+          type: number
+      required:
+        - clusterId
+        - lat
+        - lng
+        - avgSpeed
+        - confidence
+        - estimatedPassengers
+        - heading
+        - updatedAt
+
+    ClustersResponse:
+      type: object
+      properties:
+        clusters:
+          type: array
+          items:
+            $ref: "#/components/schemas/BusCluster"
+      required:
+        - clusters
+
+    ClusterConfirmation:
+      type: object
+      properties:
+        userId:
+          type: string
+        clusterId:
+          type: string
+        isBus:
+          type: boolean
+      required:
+        - userId
+        - clusterId
+        - isBus
+
+    ConfirmResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        points:
+          type: number
+      required:
+        - ok
+        - points
+
+    UserPoints:
+      type: object
+      properties:
+        userId:
+          type: string
+        points:
+          type: number
+        tripsToday:
+          type: number
+        rank:
+          type: number
+      required:
+        - userId
+        - points
+        - tripsToday
+        - rank
+
+    AdminStats:
+      type: object
+      properties:
+        activeUsers:
+          type: number
+        activeClusters:
+          type: number
+        totalLocationPings:
+          type: number
+        avgConfidence:
+          type: number
+      required:
+        - activeUsers
+        - activeClusters
+        - totalLocationPings
+        - avgConfidence

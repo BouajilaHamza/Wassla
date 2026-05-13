@@ -1,0 +1,376 @@
+Build a VERY MINIMAL MVP called “Helfer” for community-powered bus detection in Djerba, Tunisia.
+
+IMPORTANT GOAL:
+This MVP is NOT a full transport app.
+The ONLY goal is validating this hypothesis:
+
+“Can we infer moving buses from passive crowd GPS data?”
+
+Keep everything SIMPLE, LIGHTWEIGHT, and CHEAP because this runs on free Replit credits.
+
+==================================================
+TECH STACK
+==================================================
+
+Frontend:
+- Flutter
+- Material 3
+- flutter_map (OpenStreetMap)
+- geolocator
+- background_locator_2
+- dio
+- web_socket_channel
+- hive_flutter
+- firebase_auth (phone OTP)
+
+Backend:
+- FastAPI
+- Python 3.11
+- Uvicorn
+- SQLite initially (NOT Postgres for MVP)
+- WebSockets
+- Simple in-memory clustering logic
+- Docker-ready but lightweight
+
+NO Kubernetes.
+NO microservices.
+NO Kafka.
+NO Redis.
+NO AI models yet.
+NO complex auth system.
+
+==================================================
+MVP FEATURES
+==================================================
+
+====================
+1. USER AUTH
+====================
+
+Very simple:
+- Phone OTP login using Firebase Auth
+- Store:
+  - user_id
+  - phone_hash
+  - created_at
+  - points
+
+Minimal onboarding:
+- Welcome screen
+- Explain:
+  “Help map Djerba buses anonymously.”
+- Ask for:
+  - location permission
+  - background location permission
+- Toggle:
+  [ ] Share location passively
+
+====================
+2. PASSIVE GPS TRACKING
+====================
+
+MOST IMPORTANT FEATURE.
+
+Requirements:
+- Background GPS tracking
+- Foreground service notification on Android:
+  “🚌 Helfer is helping map buses”
+- Adaptive GPS frequency:
+  - moving fast: every 5 sec
+  - walking: every 10 sec
+  - stationary: every 60 sec
+
+Collect:
+- latitude
+- longitude
+- timestamp
+- speed
+- accuracy
+- heading
+- battery level (optional)
+
+Store locally in Hive first if offline.
+
+When internet exists:
+POST to backend:
+POST /location
+
+Payload:
+{
+  userId,
+  lat,
+  lng,
+  speed,
+  accuracy,
+  heading,
+  timestamp
+}
+
+Battery optimization is VERY important.
+
+====================
+3. LIVE MAP SCREEN
+====================
+
+Use flutter_map with OpenStreetMap.
+
+Show:
+- user current location (blue dot)
+- inferred bus clusters (bus icon)
+- cluster confidence %
+- last update timestamp
+
+Bus clusters come from:
+GET /clusters
+
+Map should auto-refresh every 5–10 seconds.
+
+====================
+4. SIMPLE CLUSTER DETECTION
+====================
+
+Backend clustering logic:
+
+If:
+- 3+ users
+- moving together
+- within 40 meters
+- similar speed
+- same direction
+for > 2 minutes
+
+Then:
+Create “bus cluster”.
+
+Each cluster has:
+{
+  cluster_id,
+  lat,
+  lng,
+  avg_speed,
+  confidence,
+  estimated_passengers
+}
+
+NO machine learning yet.
+
+Simple geometric heuristics only.
+
+====================
+5. BUS CONFIRMATION POPUP
+====================
+
+IMPORTANT FOR DATA LABELING.
+
+If user appears inside a cluster:
+Show lightweight popup:
+
+“Are you currently on a bus?”
+[YES] [NO]
+
+Send answer to:
+POST /cluster/confirm
+
+This improves future algorithms later.
+
+====================
+6. REWARDS SCREEN
+====================
+
+Very lightweight.
+
+Show:
+- total contribution points
+- trips contributed today
+- current rank
+
+Simple scoring:
+- active tracking minute = 1 point
+- confirmed cluster = +10 points
+
+NO payouts yet.
+NO Flouci integration yet.
+
+Just simulate points.
+
+====================
+7. ADMIN DEBUG PAGE
+====================
+
+Simple hidden page:
+- show active users
+- show active clusters
+- raw GPS points count
+- average confidence
+
+For testing MVP only.
+
+==================================================
+BACKEND API
+==================================================
+
+Implement these endpoints:
+
+POST /location
+- receive GPS pings
+
+GET /clusters
+- return active inferred bus clusters
+
+POST /cluster/confirm
+- user confirms if inside bus
+
+GET /user/points
+- return reward points
+
+GET /health
+- health check
+
+WebSocket:
+- /ws/clusters
+- push live cluster updates
+
+==================================================
+DATABASE (SQLite SIMPLE MVP)
+==================================================
+
+Tables:
+
+users
+- id
+- phone_hash
+- created_at
+- points
+
+locations
+- id
+- user_id
+- lat
+- lng
+- speed
+- heading
+- accuracy
+- timestamp
+
+clusters
+- id
+- lat
+- lng
+- avg_speed
+- confidence
+- created_at
+- updated_at
+
+cluster_members
+- cluster_id
+- user_id
+
+cluster_confirmations
+- id
+- cluster_id
+- user_id
+- is_bus
+- timestamp
+
+==================================================
+IMPORTANT ENGINEERING RULES
+==================================================
+
+1. KEEP EVERYTHING SIMPLE
+This is only for validation.
+
+2. MINIMIZE REPLIT RESOURCE USAGE
+- Avoid heavy polling
+- Avoid unnecessary libraries
+- Avoid AI inference
+
+3. OFFLINE-FIRST
+If no internet:
+- store GPS locally
+- sync later
+
+4. PRIVACY-FIRST
+- never expose exact user identities
+- do not store raw phone numbers
+- allow “pause sharing”
+
+5. BATTERY OPTIMIZATION
+Critical.
+
+6. CLEAN CODE STRUCTURE
+Use:
+- services/
+- models/
+- screens/
+- repositories/
+
+==================================================
+FOLDER STRUCTURE
+==================================================
+
+Frontend:
+lib/
+  screens/
+  services/
+  models/
+  widgets/
+  repositories/
+
+Backend:
+app/
+  api/
+  models/
+  services/
+  clustering/
+  database/
+
+==================================================
+DELIVERABLES
+==================================================
+
+Generate:
+1. Full Flutter app
+2. Full FastAPI backend
+3. README with setup instructions
+4. Example .env files
+5. Minimal clustering implementation
+6. SQLite setup
+7. WebSocket realtime updates
+8. Android foreground service implementation
+9. Basic testing instructions
+
+==================================================
+DESIGN STYLE
+==================================================
+
+Minimal.
+Fast.
+Mobile-first.
+Dark mode.
+Transport-focused.
+
+Use:
+- teal/blue accents
+- clean cards
+- large map
+- low clutter
+
+==================================================
+NON-GOALS (DO NOT BUILD)
+==================================================
+
+DO NOT BUILD:
+- ads
+- AI prediction
+- route optimization
+- fuel optimization
+- government dashboard
+- operator dashboard
+- payments
+- complex analytics
+- social features
+- chat
+- trip planning
+
+This MVP only validates:
+“Can passive crowd GPS detect buses reliably?”

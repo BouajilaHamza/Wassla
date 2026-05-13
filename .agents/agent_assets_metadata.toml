@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "BDa-zt9Vh9JRn7rqycjNV"
+uri = "file://artifacts/mobile/assets/images/icon.png"
+type = "image"
+title = "helfer bus app icon"
