@@ -10,7 +10,7 @@ import { useColors } from "@/hooks/useColors";
 import { DJERBA_BUS_ROUTES } from "@/lib/busRoutes";
 import type { BusCluster } from "@workspace/api-client-react";
 
-const DJERBA_CENTER = { latitude: 33.8, longitude: 10.87 };
+const DJERBA_CENTER = { latitude: 33.79, longitude: 10.87 };
 
 interface Props {
   mapRef: React.RefObject<MapView | null>;
@@ -99,19 +99,19 @@ export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
         provider={PROVIDER_DEFAULT}
         initialRegion={{
           ...DJERBA_CENTER,
-          latitudeDelta: 0.25,
-          longitudeDelta: 0.25,
+          latitudeDelta: 0.28,
+          longitudeDelta: 0.28,
         }}
         showsUserLocation={isTracking}
         showsMyLocationButton={false}
       >
-        {/* Bus route polylines */}
+        {/* SRTM bus route polylines — stop coordinates from official dataset */}
         {DJERBA_BUS_ROUTES.map((route) => (
           <Polyline
             key={route.id}
-            coordinates={route.waypoints.map((w) => ({
-              latitude: w.lat,
-              longitude: w.lng,
+            coordinates={route.stops.map((s) => ({
+              latitude: s.lat,
+              longitude: s.lng,
             }))}
             strokeColor={route.color}
             strokeWidth={3}
@@ -123,17 +123,14 @@ export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
         {DJERBA_BUS_ROUTES.flatMap((route) =>
           route.stops.map((stop) => (
             <Marker
-              key={`${route.id}-${stop.name}`}
+              key={`${route.id}-${stop.code}`}
               coordinate={{ latitude: stop.lat, longitude: stop.lng }}
               tracksViewChanges={false}
               anchor={{ x: 0.5, y: 0.5 }}
+              title={stop.nameFr}
+              description={stop.nameAr}
             >
-              <View
-                style={[
-                  s.stopDot,
-                  { backgroundColor: route.color },
-                ]}
-              />
+              <View style={[s.stopDot, { backgroundColor: route.color }]} />
             </Marker>
           )),
         )}
@@ -168,7 +165,9 @@ export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
         {DJERBA_BUS_ROUTES.map((route) => (
           <View key={route.id} style={s.legendRow}>
             <View style={[s.legendLine, { backgroundColor: route.color }]} />
-            <Text style={s.legendText}>{route.shortName} {route.name.split("↔")[0].trim()}</Text>
+            <Text style={s.legendText}>
+              {route.shortName} · {route.stops[0].nameFr} → {route.stops[route.stops.length - 1].nameFr}
+            </Text>
           </View>
         ))}
       </View>

@@ -4,8 +4,6 @@ import { useColors } from "@/hooks/useColors";
 import { DJERBA_BUS_ROUTES } from "@/lib/busRoutes";
 import type { BusCluster } from "@workspace/api-client-react";
 
-const DJERBA_CENTER = { lat: 33.87, lng: 10.85 };
-
 interface Props {
   mapRef?: React.RefObject<any>;
   currentLat?: number;
@@ -24,7 +22,7 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
 
   const s = StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
-    webMapBanner: {
+    banner: {
       backgroundColor: colors.card,
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
@@ -32,8 +30,8 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
       alignItems: "center",
       gap: 4,
     },
-    webMapRow: { flexDirection: "row", alignItems: "center", gap: 6 },
-    webMapText: {
+    bannerRow: { flexDirection: "row", alignItems: "center", gap: 6 },
+    bannerText: {
       fontSize: 13,
       fontFamily: "Inter_400Regular",
       color: colors.mutedForeground,
@@ -43,7 +41,6 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
       fontSize: 12,
       fontFamily: "Inter_400Regular",
       color: colors.primary,
-      fontVariant: ["tabular-nums"] as any,
     },
     scroll: { flex: 1 },
     content: { padding: 16, gap: 12 },
@@ -135,49 +132,47 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
       color: colors.foreground,
       flex: 1,
     },
-    routeBadge: {
-      paddingHorizontal: 8,
-      paddingVertical: 3,
-      borderRadius: 6,
-    },
-    routeBadgeText: {
-      fontFamily: "Inter_700Bold",
+    routeRef: {
+      fontFamily: "Inter_400Regular",
       fontSize: 11,
-      color: "#fff",
+      color: colors.mutedForeground,
     },
-    stopsRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
-    stopChip: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 4,
-      backgroundColor: colors.background,
-      borderRadius: 6,
-      paddingHorizontal: 8,
-      paddingVertical: 4,
+    stopsScroll: { flexDirection: "row", gap: 0 },
+    stopItem: { flexDirection: "row", alignItems: "center", gap: 2 },
+    stopDot: { width: 7, height: 7, borderRadius: 4 },
+    stopArrow: {
+      fontSize: 10,
+      color: colors.border,
+      marginHorizontal: 2,
     },
-    stopDot: { width: 6, height: 6, borderRadius: 3 },
     stopText: {
       fontFamily: "Inter_400Regular",
       fontSize: 11,
       color: colors.mutedForeground,
     },
+    dataSource: {
+      fontFamily: "Inter_400Regular",
+      fontSize: 11,
+      color: colors.mutedForeground,
+      textAlign: "center",
+      marginTop: 4,
+      paddingHorizontal: 8,
+    },
   });
 
   return (
     <View style={s.container}>
-      <View style={s.webMapBanner}>
-        <View style={s.webMapRow}>
+      <View style={s.banner}>
+        <View style={s.bannerRow}>
           <Feather name="smartphone" size={13} color={colors.mutedForeground} />
-          <Text style={s.webMapText}>Live map available in Expo Go on your phone</Text>
+          <Text style={s.bannerText}>Live map available in Expo Go on your phone</Text>
         </View>
         {isTracking && currentLat != null && currentLng != null ? (
           <Text style={s.coordText}>
             Your location: {currentLat.toFixed(5)}, {currentLng.toFixed(5)}
           </Text>
         ) : (
-          <Text style={s.coordText}>
-            Djerba: {DJERBA_CENTER.lat}°N, {DJERBA_CENTER.lng}°E
-          </Text>
+          <Text style={s.coordText}>Djerba island · 33.80°N, 10.87°E</Text>
         )}
       </View>
 
@@ -223,30 +218,39 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
           ))
         )}
 
-        {/* Known routes */}
-        <Text style={[s.sectionLabel, { marginTop: 8 }]}>SRTGN bus routes — Djerba</Text>
+        {/* SRTM routes */}
+        <Text style={[s.sectionLabel, { marginTop: 8 }]}>
+          SRTM bus routes · Djerba island
+        </Text>
         {DJERBA_BUS_ROUTES.map((route) => (
           <View key={route.id} style={s.routeCard}>
             <View style={s.routeHeader}>
               <View style={[s.routeBar, { backgroundColor: route.color }]} />
-              <Text style={s.routeName}>{route.name}</Text>
-              <View style={[s.routeBadge, { backgroundColor: route.color }]}>
-                <Text style={s.routeBadgeText}>{route.shortName}</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={s.routeName}>{route.name}</Text>
+                <Text style={s.routeRef}>Ref: {route.ref}</Text>
               </View>
+              <Text style={[s.routeRef, { color: route.color, fontFamily: "Inter_700Bold" }]}>
+                {route.shortName}
+              </Text>
             </View>
-            <View style={s.stopsRow}>
+            <View style={s.stopsScroll}>
               {route.stops.map((stop, i) => (
-                <View key={stop.name} style={s.stopChip}>
+                <View key={stop.code} style={s.stopItem}>
                   <View style={[s.stopDot, { backgroundColor: route.color }]} />
-                  <Text style={s.stopText}>{stop.name.split(" (")[0]}</Text>
+                  <Text style={s.stopText}>{stop.nameFr}</Text>
                   {i < route.stops.length - 1 && (
-                    <Feather name="chevron-right" size={10} color={colors.border} />
+                    <Text style={s.stopArrow}>›</Text>
                   )}
                 </View>
               ))}
             </View>
           </View>
         ))}
+
+        <Text style={s.dataSource}>
+          Station coordinates: Tunisian Open Transport Data (data.transport.tn) · SRTM official dataset
+        </Text>
       </ScrollView>
     </View>
   );
