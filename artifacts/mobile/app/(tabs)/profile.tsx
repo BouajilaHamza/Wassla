@@ -66,10 +66,10 @@ export default function ProfileScreen() {
     },
     header: { marginBottom: 28 },
     headerTitle: {
-      fontSize: 28,
+      fontSize: 30,
       fontFamily: "Inter_700Bold",
       color: colors.foreground,
-      letterSpacing: -0.5,
+      letterSpacing: -0.8,
     },
     headerSub: {
       fontSize: 14,
@@ -77,14 +77,16 @@ export default function ProfileScreen() {
       color: colors.mutedForeground,
       marginTop: 4,
     },
-    avatar: {
+    avatarWrap: {
       width: 72,
       height: 72,
       borderRadius: 22,
-      backgroundColor: colors.primary + "22",
+      backgroundColor: colors.primary + "18",
       justifyContent: "center",
       alignItems: "center",
       marginBottom: 16,
+      borderWidth: 1,
+      borderColor: colors.primary + "33",
     },
     phoneText: {
       fontSize: 22,
@@ -101,10 +103,10 @@ export default function ProfileScreen() {
     },
     section: {
       backgroundColor: colors.card,
-      borderRadius: 16,
+      borderRadius: 18,
       borderWidth: 1,
       borderColor: colors.border,
-      marginBottom: 16,
+      marginBottom: 14,
       overflow: "hidden",
     },
     row: {
@@ -119,9 +121,9 @@ export default function ProfileScreen() {
       marginHorizontal: 16,
     },
     rowIcon: {
-      width: 38,
-      height: 38,
-      borderRadius: 10,
+      width: 40,
+      height: 40,
+      borderRadius: 12,
       justifyContent: "center",
       alignItems: "center",
     },
@@ -139,7 +141,7 @@ export default function ProfileScreen() {
     },
     logoutBtn: {
       backgroundColor: colors.card,
-      borderRadius: 16,
+      borderRadius: 18,
       borderWidth: 1,
       borderColor: colors.border,
       padding: 16,
@@ -172,8 +174,8 @@ export default function ProfileScreen() {
           <Text style={s.headerSub}>Your contribution settings</Text>
         </View>
 
-        <View style={s.avatar}>
-          <Feather name="user" size={32} color={colors.primary} />
+        <View style={s.avatarWrap}>
+          <Feather name="user" size={30} color={colors.primary} />
         </View>
         <Text style={s.phoneText}>{user?.phoneDisplay ?? "Anonymous"}</Text>
         <Text style={s.idText} numberOfLines={1}>
@@ -184,7 +186,7 @@ export default function ProfileScreen() {
 
         <View style={s.section}>
           <View style={s.row}>
-            <View style={[s.rowIcon, { backgroundColor: colors.primary + "22" }]}>
+            <View style={[s.rowIcon, { backgroundColor: colors.primary + "18" }]}>
               <Feather name="radio" size={18} color={colors.primary} />
             </View>
             <View style={{ flex: 1 }}>
@@ -205,7 +207,7 @@ export default function ProfileScreen() {
           </View>
           <View style={s.divider} />
           <View style={s.row}>
-            <View style={[s.rowIcon, { backgroundColor: "#10B98122" }]}>
+            <View style={[s.rowIcon, { backgroundColor: "#10B98118" }]}>
               <Feather name="shield" size={18} color="#10B981" />
             </View>
             <View>
@@ -221,7 +223,7 @@ export default function ProfileScreen() {
               style={s.row}
               onPress={() => router.push("/admin" as any)}
             >
-              <View style={[s.rowIcon, { backgroundColor: colors.accent + "22" }]}>
+              <View style={[s.rowIcon, { backgroundColor: colors.accent + "18" }]}>
                 <Feather name="terminal" size={18} color={colors.accent} />
               </View>
               <Text style={s.rowLabel}>Admin debug panel</Text>
@@ -235,12 +237,11 @@ export default function ProfileScreen() {
         </Pressable>
 
         <Text style={s.disclaimer}>
-          Helfer collects anonymous GPS data to infer bus routes in Djerba.
-          {"\n"}No personal data is stored or shared.
+          Wasla collects anonymous GPS data to infer bus routes in Djerba.{"\n"}No personal data is stored or shared.
         </Text>
 
         <Pressable style={s.versionTap} onPress={handleAdminTap}>
-          <Text style={s.disclaimer}>Helfer MVP v0.1.0</Text>
+          <Text style={s.disclaimer}>Wasla v1.0.0</Text>
         </Pressable>
       </ScrollView>
     </View>

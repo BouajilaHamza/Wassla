@@ -17,7 +17,7 @@ function formatSpeed(kmh: number): string {
   return `${Math.round(kmh)} km/h`;
 }
 
-export default function HelferMap({ clusters, isTracking, currentLat, currentLng }: Props) {
+export default function WaslaMap({ clusters, isTracking, currentLat, currentLng }: Props) {
   const colors = useColors();
 
   const s = StyleSheet.create({
@@ -28,7 +28,7 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
       borderBottomColor: colors.border,
       padding: 14,
       alignItems: "center",
-      gap: 4,
+      gap: 5,
     },
     bannerRow: { flexDirection: "row", alignItems: "center", gap: 6 },
     bannerText: {
@@ -46,45 +46,47 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
     content: { padding: 16, gap: 12 },
     sectionLabel: {
       fontFamily: "Inter_600SemiBold",
-      fontSize: 12,
+      fontSize: 11,
       color: colors.mutedForeground,
       textTransform: "uppercase",
-      letterSpacing: 0.8,
+      letterSpacing: 1,
       marginBottom: 2,
     },
     emptyWrap: {
       justifyContent: "center",
       alignItems: "center",
-      gap: 8,
-      paddingVertical: 32,
+      gap: 10,
+      paddingVertical: 36,
     },
     emptyText: {
       fontSize: 14,
       fontFamily: "Inter_400Regular",
       color: colors.mutedForeground,
       textAlign: "center",
-      lineHeight: 21,
+      lineHeight: 22,
     },
     clusterCard: {
       backgroundColor: colors.card,
-      borderRadius: 14,
+      borderRadius: 18,
       borderWidth: 1,
       borderColor: colors.border,
-      padding: 14,
+      padding: 16,
     },
     clusterHeader: {
       flexDirection: "row",
       alignItems: "center",
-      gap: 10,
-      marginBottom: 10,
+      gap: 12,
+      marginBottom: 12,
     },
     clusterIconBg: {
-      width: 38,
-      height: 38,
-      borderRadius: 10,
-      backgroundColor: colors.primary + "22",
+      width: 42,
+      height: 42,
+      borderRadius: 12,
+      backgroundColor: colors.primary + "18",
       justifyContent: "center",
       alignItems: "center",
+      borderWidth: 1,
+      borderColor: colors.primary + "30",
     },
     clusterTitle: {
       fontFamily: "Inter_700Bold",
@@ -95,108 +97,64 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
       fontFamily: "Inter_400Regular",
       fontSize: 12,
       color: colors.primary,
-      marginTop: 1,
+      marginTop: 2,
     },
     clusterGrid: { flexDirection: "row", gap: 8 },
     clusterStat: {
       flex: 1,
-      backgroundColor: colors.background,
-      borderRadius: 8,
+      backgroundColor: colors.secondary,
+      borderRadius: 10,
       padding: 10,
       alignItems: "center",
       gap: 2,
     },
     clusterStatNum: {
       fontFamily: "Inter_700Bold",
-      fontSize: 16,
+      fontSize: 15,
       color: colors.foreground,
     },
     clusterStatLabel: {
       fontFamily: "Inter_400Regular",
-      fontSize: 11,
+      fontSize: 10,
       color: colors.mutedForeground,
     },
     routeCard: {
       backgroundColor: colors.card,
-      borderRadius: 14,
+      borderRadius: 16,
       borderWidth: 1,
       borderColor: colors.border,
       overflow: "hidden",
     },
-    routeColorBar: {
-      height: 3,
-      width: "100%",
-    },
-    routeBody: {
-      padding: 12,
-      gap: 8,
-    },
-    routeHeader: {
-      flexDirection: "row",
-      alignItems: "flex-start",
-      gap: 8,
-    },
+    routeColorBar: { height: 3, width: "100%" },
+    routeBody: { padding: 14, gap: 10 },
+    routeHeader: { flexDirection: "row", alignItems: "flex-start", gap: 10 },
     routePathBadge: {
-      width: 26,
-      height: 26,
+      width: 28,
+      height: 28,
       borderRadius: 8,
       justifyContent: "center",
       alignItems: "center",
     },
-    routePathText: {
-      fontFamily: "Inter_700Bold",
-      fontSize: 13,
-      color: "#fff",
-    },
+    routePathText: { fontFamily: "Inter_700Bold", fontSize: 13, color: "#fff" },
     routeInfo: { flex: 1 },
     routeName: {
       fontFamily: "Inter_600SemiBold",
       fontSize: 14,
       color: colors.foreground,
-      lineHeight: 18,
+      lineHeight: 19,
     },
-    routeRefsRow: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      gap: 4,
-      marginTop: 4,
-    },
-    refChip: {
-      paddingHorizontal: 6,
-      paddingVertical: 2,
-      borderRadius: 5,
-    },
-    refChipText: {
-      fontFamily: "Inter_600SemiBold",
-      fontSize: 10,
-      color: "#fff",
-    },
-    stopsRow: {
-      flexDirection: "row",
-      flexWrap: "wrap",
-      alignItems: "center",
-      gap: 2,
-    },
-    stopItem: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 2,
-    },
-    stopDot: {
-      width: 6,
-      height: 6,
-      borderRadius: 3,
-    },
+    routeRefsRow: { flexDirection: "row", flexWrap: "wrap", gap: 5, marginTop: 5 },
+    refChip: { paddingHorizontal: 7, paddingVertical: 3, borderRadius: 6 },
+    refChipText: { fontFamily: "Inter_600SemiBold", fontSize: 10, color: "#fff" },
+    stopsRow: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: 3 },
+    stopItem: { flexDirection: "row", alignItems: "center", gap: 3 },
+    stopDot: { width: 6, height: 6, borderRadius: 3 },
     stopText: {
       fontFamily: "Inter_400Regular",
       fontSize: 11,
       color: colors.mutedForeground,
     },
-    stopArrow: {
-      fontSize: 10,
-      color: colors.border,
-      marginHorizontal: 1,
-    },
+    stopArrow: { fontSize: 10, color: colors.border, marginHorizontal: 1 },
     dataSource: {
       fontFamily: "Inter_400Regular",
       fontSize: 11,
@@ -216,7 +174,7 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
         </View>
         {isTracking && currentLat != null && currentLng != null ? (
           <Text style={s.coordText}>
-            Your location: {currentLat.toFixed(5)}, {currentLng.toFixed(5)}
+            {currentLat.toFixed(5)}, {currentLng.toFixed(5)}
           </Text>
         ) : (
           <Text style={s.coordText}>Djerba island · 33.80°N, 10.87°E</Text>
@@ -267,7 +225,7 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
 
         {/* All SRTM routes */}
         <Text style={[s.sectionLabel, { marginTop: 8 }]}>
-          SRTM routes · {DJERBA_BUS_ROUTES.reduce((n, r) => n + r.refs.length, 0)} lines · {DJERBA_BUS_ROUTES.length} unique island paths
+          SRTM routes · {DJERBA_BUS_ROUTES.reduce((n, r) => n + r.refs.length, 0)} lines · {DJERBA_BUS_ROUTES.length} island paths
         </Text>
 
         {DJERBA_BUS_ROUTES.map((route) => (
@@ -282,10 +240,7 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
                   <Text style={s.routeName}>{route.name}</Text>
                   <View style={s.routeRefsRow}>
                     {route.refs.map((ref) => (
-                      <View
-                        key={ref}
-                        style={[s.refChip, { backgroundColor: route.color + "CC" }]}
-                      >
+                      <View key={ref} style={[s.refChip, { backgroundColor: route.color + "CC" }]}>
                         <Text style={s.refChipText}>{ref}</Text>
                       </View>
                     ))}
@@ -310,7 +265,7 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
 
         <Text style={s.dataSource}>
           Station GPS: Tunisian Open Transport Data (catalogue-data.transport.tn){"\n"}
-          Stop sequences: SRTM schedules XLSX — all 8 agency sheets analysed
+          Stop sequences: SRTM schedules XLSX — all 8 agency sheets
         </Text>
       </ScrollView>
     </View>

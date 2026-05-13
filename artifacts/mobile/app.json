@@ -1,23 +1,23 @@
 {
   "expo": {
-    "name": "Helfer",
+    "name": "Wasla",
     "slug": "mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "mobile",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#080D1A"
+      "backgroundColor": "#FAF8F4"
     },
     "ios": {
       "supportsTablet": false,
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Helfer uses your location to detect nearby buses and help map transit routes in Djerba.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "Helfer uses your location in the background to passively detect bus movements."
+        "NSLocationWhenInUseUsageDescription": "Wasla uses your location to detect nearby buses and help map transit routes in Djerba.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Wasla uses your location in the background to passively detect bus movements."
       }
     },
     "android": {
@@ -43,7 +43,7 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Helfer uses your location to help map Djerba buses."
+          "locationAlwaysAndWhenInUsePermission": "Wasla uses your location to help map Djerba buses."
         }
       ]
     ],

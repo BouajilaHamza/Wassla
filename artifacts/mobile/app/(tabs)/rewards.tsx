@@ -9,22 +9,16 @@ import { useTracking } from "@/context/TrackingContext";
 function RankBadge({ rank }: { rank: number }) {
   const colors = useColors();
   const labels: Record<number, { label: string; icon: string; color: string }> = {
-    1: { label: "Pioneer", icon: "award", color: "#FFD700" },
-    2: { label: "Mapper", icon: "map", color: "#C0C0C0" },
-    3: { label: "Scout", icon: "compass", color: "#CD7F32" },
+    1: { label: "Pioneer", icon: "award", color: "#C49A3C" },
+    2: { label: "Mapper", icon: "map", color: "#9B8B72" },
+    3: { label: "Scout", icon: "compass", color: "#8B6840" },
   };
   const info = labels[rank] ?? { label: `Rank #${rank}`, icon: "user", color: colors.primary };
 
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
       <Feather name={info.icon as any} size={16} color={info.color} />
-      <Text
-        style={{
-          fontFamily: "Inter_600SemiBold",
-          fontSize: 14,
-          color: info.color,
-        }}
-      >
+      <Text style={{ fontFamily: "Inter_600SemiBold", fontSize: 14, color: info.color }}>
         {info.label}
       </Text>
     </View>
@@ -39,12 +33,7 @@ export default function RewardsScreen() {
 
   const { data: pointsData, isLoading } = useGetUserPoints(
     { userId: user?.userId ?? "" },
-    {
-      query: {
-        enabled: !!user,
-        refetchInterval: 15000,
-      },
-    },
+    { query: { enabled: !!user, refetchInterval: 15000 } },
   );
 
   const points = pointsData?.points ?? 0;
@@ -52,26 +41,19 @@ export default function RewardsScreen() {
   const rank = pointsData?.rank ?? 1;
 
   const s = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
-    scroll: {
-      flex: 1,
-    },
+    container: { flex: 1, backgroundColor: colors.background },
+    scroll: { flex: 1 },
     content: {
       paddingHorizontal: 20,
       paddingTop: insets.top + (Platform.OS === "web" ? 67 : 0) + 20,
       paddingBottom: insets.bottom + (Platform.OS === "web" ? 34 : 0) + 100,
     },
-    header: {
-      marginBottom: 28,
-    },
+    header: { marginBottom: 28 },
     headerTitle: {
-      fontSize: 28,
+      fontSize: 30,
       fontFamily: "Inter_700Bold",
       color: colors.foreground,
-      letterSpacing: -0.5,
+      letterSpacing: -0.8,
     },
     headerSub: {
       fontSize: 14,
@@ -81,47 +63,45 @@ export default function RewardsScreen() {
     },
     heroCard: {
       backgroundColor: colors.primary,
-      borderRadius: 20,
-      padding: 28,
+      borderRadius: 24,
+      padding: 32,
       alignItems: "center",
-      marginBottom: 16,
+      marginBottom: 14,
     },
     heroPoints: {
-      fontSize: 64,
+      fontSize: 72,
       fontFamily: "Inter_700Bold",
       color: colors.primaryForeground,
-      letterSpacing: -2,
+      letterSpacing: -3,
     },
     heroLabel: {
-      fontSize: 14,
-      fontFamily: "Inter_500Medium",
-      color: colors.primaryForeground + "CC",
+      fontSize: 13,
+      fontFamily: "Inter_600SemiBold",
+      color: colors.primaryForeground + "BB",
       marginTop: 4,
-      letterSpacing: 1,
+      letterSpacing: 1.5,
       textTransform: "uppercase",
     },
     heroRank: {
-      marginTop: 16,
-      backgroundColor: colors.primaryForeground + "22",
-      paddingHorizontal: 16,
-      paddingVertical: 8,
+      marginTop: 18,
+      backgroundColor: colors.primaryForeground + "1A",
+      paddingHorizontal: 18,
+      paddingVertical: 10,
       borderRadius: 100,
+      borderWidth: 1,
+      borderColor: colors.primaryForeground + "22",
     },
-    statsRow: {
-      flexDirection: "row",
-      gap: 12,
-      marginBottom: 24,
-    },
+    statsRow: { flexDirection: "row", gap: 12, marginBottom: 24 },
     statCard: {
       flex: 1,
       backgroundColor: colors.card,
-      borderRadius: 16,
-      padding: 18,
+      borderRadius: 18,
+      padding: 20,
       borderWidth: 1,
       borderColor: colors.border,
     },
     statNum: {
-      fontSize: 28,
+      fontSize: 30,
       fontFamily: "Inter_700Bold",
       color: colors.foreground,
       letterSpacing: -0.5,
@@ -140,41 +120,17 @@ export default function RewardsScreen() {
     },
     ruleCard: {
       backgroundColor: colors.card,
-      borderRadius: 16,
+      borderRadius: 18,
       borderWidth: 1,
       borderColor: colors.border,
       overflow: "hidden",
       marginBottom: 24,
     },
-    ruleRow: {
-      flexDirection: "row",
-      alignItems: "center",
-      padding: 16,
-      gap: 14,
-    },
-    ruleDivider: {
-      height: 1,
-      backgroundColor: colors.border,
-      marginHorizontal: 16,
-    },
-    ruleIcon: {
-      width: 40,
-      height: 40,
-      borderRadius: 12,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    ruleName: {
-      fontSize: 15,
-      fontFamily: "Inter_500Medium",
-      color: colors.foreground,
-    },
-    ruleDesc: {
-      fontSize: 12,
-      fontFamily: "Inter_400Regular",
-      color: colors.mutedForeground,
-      marginTop: 2,
-    },
+    ruleRow: { flexDirection: "row", alignItems: "center", padding: 16, gap: 14 },
+    ruleDivider: { height: 1, backgroundColor: colors.border, marginHorizontal: 16 },
+    ruleIcon: { width: 42, height: 42, borderRadius: 12, justifyContent: "center", alignItems: "center" },
+    ruleName: { fontSize: 15, fontFamily: "Inter_500Medium", color: colors.foreground },
+    ruleDesc: { fontSize: 12, fontFamily: "Inter_400Regular", color: colors.mutedForeground, marginTop: 2 },
     rulePoints: {
       marginLeft: "auto" as any,
       fontSize: 15,
@@ -185,18 +141,18 @@ export default function RewardsScreen() {
       flexDirection: "row",
       alignItems: "center",
       gap: 10,
-      backgroundColor: colors.primary + "18",
-      borderRadius: 12,
-      padding: 14,
+      backgroundColor: colors.primary + "14",
+      borderRadius: 14,
+      padding: 16,
       borderWidth: 1,
-      borderColor: colors.primary + "44",
+      borderColor: colors.primary + "33",
     },
     trackingText: {
       flex: 1,
       fontSize: 13,
       fontFamily: "Inter_400Regular",
       color: colors.foreground,
-      lineHeight: 19,
+      lineHeight: 20,
     },
   });
 
@@ -204,7 +160,7 @@ export default function RewardsScreen() {
     {
       icon: "radio",
       color: colors.primary,
-      bg: colors.primary + "22",
+      bg: colors.primary + "18",
       name: "Active tracking",
       desc: "Per minute of sharing",
       pts: "+1 pt",
@@ -212,7 +168,7 @@ export default function RewardsScreen() {
     {
       icon: "check-circle",
       color: "#10B981",
-      bg: "#10B98122",
+      bg: "#10B98118",
       name: "Bus confirmed",
       desc: "Confirm you're on a bus",
       pts: "+10 pts",

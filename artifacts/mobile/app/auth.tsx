@@ -1,4 +1,3 @@
-import { Feather } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { useRef, useState } from "react";
@@ -51,38 +50,46 @@ export default function AuthScreen() {
     },
     inner: {
       flex: 1,
-      paddingHorizontal: 28,
-      paddingTop: insets.top + (Platform.OS === "web" ? 67 : 0) + 60,
-      paddingBottom: insets.bottom + (Platform.OS === "web" ? 34 : 0) + 24,
+      paddingHorizontal: 32,
+      paddingTop: insets.top + (Platform.OS === "web" ? 67 : 0) + 56,
+      paddingBottom: insets.bottom + (Platform.OS === "web" ? 34 : 0) + 32,
     },
-    busIcon: {
-      width: 72,
-      height: 72,
-      borderRadius: 20,
-      backgroundColor: colors.primary + "22",
-      justifyContent: "center",
-      alignItems: "center",
-      marginBottom: 28,
+    wordmarkWrap: {
+      marginBottom: 40,
     },
-    title: {
-      fontSize: 36,
+    wordmark: {
+      fontSize: 48,
       fontFamily: "Inter_700Bold",
-      color: colors.foreground,
-      letterSpacing: -1,
-      marginBottom: 8,
+      color: colors.primary,
+      letterSpacing: -2,
+    },
+    wordmarkAr: {
+      fontSize: 17,
+      fontFamily: "Inter_400Regular",
+      color: colors.mutedForeground,
+      marginTop: 2,
+      letterSpacing: 1,
+    },
+    divider: {
+      width: 36,
+      height: 2,
+      backgroundColor: colors.primary,
+      borderRadius: 1,
+      marginTop: 16,
+      marginBottom: 20,
     },
     subtitle: {
       fontSize: 16,
       fontFamily: "Inter_400Regular",
       color: colors.mutedForeground,
-      lineHeight: 24,
-      marginBottom: 48,
+      lineHeight: 25,
     },
+    spacer: { flex: 1 },
     label: {
-      fontSize: 12,
+      fontSize: 11,
       fontFamily: "Inter_600SemiBold",
       color: colors.mutedForeground,
-      letterSpacing: 1,
+      letterSpacing: 1.2,
       textTransform: "uppercase",
       marginBottom: 10,
     },
@@ -93,46 +100,55 @@ export default function AuthScreen() {
       borderRadius: colors.radius,
       borderWidth: 1,
       borderColor: colors.border,
-      paddingHorizontal: 16,
-      marginBottom: 12,
+      paddingHorizontal: 18,
+      marginBottom: 14,
+    },
+    inputRowFocus: {
+      borderColor: colors.primary,
     },
     input: {
       flex: 1,
-      height: 52,
+      height: 56,
       fontFamily: "Inter_400Regular",
       fontSize: 17,
       color: colors.foreground,
+    },
+    validDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: colors.primary,
     },
     error: {
       fontSize: 13,
       fontFamily: "Inter_400Regular",
       color: colors.destructive,
-      marginBottom: 24,
+      marginBottom: 16,
     },
     button: {
       backgroundColor: colors.primary,
       borderRadius: colors.radius,
-      height: 56,
+      height: 58,
       justifyContent: "center",
       alignItems: "center",
-      marginTop: 8,
+      marginTop: 4,
     },
     buttonDisabled: {
-      opacity: 0.45,
+      opacity: 0.4,
     },
     buttonText: {
       color: colors.primaryForeground,
       fontFamily: "Inter_600SemiBold",
       fontSize: 16,
-      letterSpacing: 0.3,
+      letterSpacing: 0.5,
     },
     disclaimer: {
-      fontSize: 13,
+      fontSize: 12,
       fontFamily: "Inter_400Regular",
       color: colors.mutedForeground,
       textAlign: "center",
       marginTop: 20,
-      lineHeight: 20,
+      lineHeight: 19,
     },
   });
 
@@ -142,15 +158,16 @@ export default function AuthScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={s.inner}>
-        <View style={s.busIcon}>
-          <Feather name="map-pin" size={32} color={colors.primary} />
+        <View style={s.wordmarkWrap}>
+          <Text style={s.wordmark}>Wasla</Text>
+          <Text style={s.wordmarkAr}>وصلة · Connecting Djerba</Text>
+          <View style={s.divider} />
+          <Text style={s.subtitle}>
+            Help map Djerba's buses anonymously.{"\n"}Share your location passively and earn points while improving transit for everyone.
+          </Text>
         </View>
 
-        <Text style={s.title}>Helfer</Text>
-        <Text style={s.subtitle}>
-          Help map Djerba buses anonymously.{"\n"}Share your location passively
-          and earn points while improving transit for everyone.
-        </Text>
+        <View style={s.spacer} />
 
         <Text style={s.label}>Phone number</Text>
         <View style={s.inputRow}>
@@ -163,19 +180,13 @@ export default function AuthScreen() {
               setError("");
             }}
             placeholder="+216 XX XXX XXX"
-            placeholderTextColor={colors.mutedForeground}
+            placeholderTextColor={colors.mutedForeground + "88"}
             keyboardType="phone-pad"
             autoComplete="tel"
             returnKeyType="done"
             onSubmitEditing={handleJoin}
           />
-          {phone.length > 0 && (
-            <Feather
-              name="check-circle"
-              size={20}
-              color={isValid ? colors.primary : colors.border}
-            />
-          )}
+          {isValid && <View style={s.validDot} />}
         </View>
 
         {error ? <Text style={s.error}>{error}</Text> : null}
@@ -186,13 +197,12 @@ export default function AuthScreen() {
           disabled={!isValid || isLoading}
         >
           <Text style={s.buttonText}>
-            {isLoading ? "Joining..." : "Join Helfer"}
+            {isLoading ? "Joining…" : "Join Wasla"}
           </Text>
         </Pressable>
 
         <Text style={s.disclaimer}>
-          Your phone number is hashed locally.{"\n"}We never store or share
-          your identity.
+          Your phone number is hashed locally.{"\n"}We never store or share your identity.
         </Text>
       </View>
     </KeyboardAvoidingView>

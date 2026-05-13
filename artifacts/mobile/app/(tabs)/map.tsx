@@ -16,7 +16,7 @@ import { useGetClusters, useConfirmCluster } from "@workspace/api-client-react";
 import { useColors } from "@/hooks/useColors";
 import { useAuth } from "@/context/AuthContext";
 import { useTracking } from "@/context/TrackingContext";
-import HelferMap from "@/components/HelferMap";
+import WaslaMap from "@/components/WaslaMap";
 
 function formatSpeed(speedMs: number): string {
   const kmh = speedMs * 3.6;
@@ -48,45 +48,58 @@ function ConfirmModal({
   }
 
   const s = StyleSheet.create({
-    overlay: { flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0,0,0,0.5)" },
+    overlay: { flex: 1, justifyContent: "flex-end", backgroundColor: "rgba(0,0,0,0.4)" },
     sheet: {
       backgroundColor: colors.card,
-      borderTopLeftRadius: 24,
-      borderTopRightRadius: 24,
-      padding: 28,
-      paddingBottom: 44,
+      borderTopLeftRadius: 28,
+      borderTopRightRadius: 28,
+      padding: 32,
+      paddingBottom: 48,
+      borderTopWidth: 1,
+      borderColor: colors.border,
+    },
+    handle: {
+      width: 36,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: colors.border,
+      alignSelf: "center",
+      marginBottom: 28,
     },
     iconWrap: {
-      width: 56,
-      height: 56,
-      borderRadius: 14,
-      backgroundColor: colors.primary + "22",
+      width: 60,
+      height: 60,
+      borderRadius: 18,
+      backgroundColor: colors.primary + "18",
       justifyContent: "center",
       alignItems: "center",
-      marginBottom: 16,
+      marginBottom: 20,
       alignSelf: "center",
+      borderWidth: 1,
+      borderColor: colors.primary + "33",
     },
     title: {
-      fontSize: 20,
+      fontSize: 22,
       fontFamily: "Inter_700Bold",
       color: colors.foreground,
       textAlign: "center",
       marginBottom: 8,
+      letterSpacing: -0.5,
     },
     sub: {
       fontSize: 14,
       fontFamily: "Inter_400Regular",
       color: colors.mutedForeground,
       textAlign: "center",
-      marginBottom: 28,
-      lineHeight: 21,
+      marginBottom: 32,
+      lineHeight: 22,
     },
     row: { flexDirection: "row", gap: 12 },
     btnYes: {
       flex: 1,
       backgroundColor: colors.primary,
       borderRadius: colors.radius,
-      height: 50,
+      height: 54,
       justifyContent: "center",
       alignItems: "center",
     },
@@ -94,13 +107,15 @@ function ConfirmModal({
       flex: 1,
       backgroundColor: colors.secondary,
       borderRadius: colors.radius,
-      height: 50,
+      height: 54,
       justifyContent: "center",
       alignItems: "center",
+      borderWidth: 1,
+      borderColor: colors.border,
     },
     btnYesText: { fontFamily: "Inter_600SemiBold", fontSize: 15, color: colors.primaryForeground },
     btnNoText: { fontFamily: "Inter_600SemiBold", fontSize: 15, color: colors.foreground },
-    dismiss: { alignSelf: "center", marginTop: 16, paddingVertical: 8, paddingHorizontal: 16 },
+    dismiss: { alignSelf: "center", marginTop: 18, paddingVertical: 8, paddingHorizontal: 16 },
     dismissText: { fontFamily: "Inter_400Regular", fontSize: 13, color: colors.mutedForeground },
   });
 
@@ -108,6 +123,7 @@ function ConfirmModal({
     <Modal visible={visible} transparent animationType="slide">
       <Pressable style={s.overlay} onPress={onDismiss}>
         <Pressable style={s.sheet} onPress={() => {}}>
+          <View style={s.handle} />
           <View style={s.iconWrap}>
             <Feather name="navigation" size={28} color={colors.primary} />
           </View>
@@ -161,8 +177,8 @@ export default function MapScreen() {
     if (!isTracking) return;
     const anim = Animated.loop(
       Animated.sequence([
-        Animated.timing(pulseAnim, { toValue: 1.3, duration: 800, useNativeDriver: true }),
-        Animated.timing(pulseAnim, { toValue: 1, duration: 800, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 1.25, duration: 900, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 1, duration: 900, useNativeDriver: true }),
       ]),
     );
     anim.start();
@@ -196,32 +212,46 @@ export default function MapScreen() {
     },
     titleCard: {
       flex: 1,
-      backgroundColor: colors.card + "F2",
-      borderRadius: 14,
+      backgroundColor: colors.card + "F5",
+      borderRadius: 16,
       paddingHorizontal: 16,
-      paddingVertical: 10,
+      paddingVertical: 11,
       borderWidth: 1,
       borderColor: colors.border,
     },
-    titleText: { fontSize: 17, fontFamily: "Inter_700Bold", color: colors.foreground },
+    titleText: {
+      fontSize: 18,
+      fontFamily: "Inter_700Bold",
+      color: colors.foreground,
+      letterSpacing: -0.5,
+    },
     subtitleText: {
       fontSize: 12,
       fontFamily: "Inter_400Regular",
       color: colors.mutedForeground,
-      marginTop: 1,
+      marginTop: 2,
     },
     statsChip: {
-      backgroundColor: colors.card + "F2",
-      borderRadius: 14,
-      paddingHorizontal: 12,
-      paddingVertical: 10,
+      backgroundColor: colors.card + "F5",
+      borderRadius: 16,
+      paddingHorizontal: 14,
+      paddingVertical: 11,
       alignItems: "center",
-      minWidth: 58,
+      minWidth: 62,
       borderWidth: 1,
       borderColor: colors.border,
     },
-    statsNum: { fontSize: 18, fontFamily: "Inter_700Bold", color: colors.primary },
-    statsLabel: { fontSize: 10, fontFamily: "Inter_400Regular", color: colors.mutedForeground },
+    statsNum: {
+      fontSize: 20,
+      fontFamily: "Inter_700Bold",
+      color: colors.primary,
+    },
+    statsLabel: {
+      fontSize: 10,
+      fontFamily: "Inter_400Regular",
+      color: colors.mutedForeground,
+      marginTop: 1,
+    },
     bottomBar: {
       position: "absolute",
       bottom: insets.bottom + (Platform.OS === "web" ? 34 : 0) + 90,
@@ -234,7 +264,7 @@ export default function MapScreen() {
     },
     trackBtn: {
       flex: 1,
-      height: 54,
+      height: 56,
       borderRadius: 16,
       justifyContent: "center",
       alignItems: "center",
@@ -249,8 +279,8 @@ export default function MapScreen() {
     },
     trackBtnText: { fontFamily: "Inter_600SemiBold", fontSize: 15 },
     locBtn: {
-      width: 54,
-      height: 54,
+      width: 56,
+      height: 56,
       borderRadius: 16,
       backgroundColor: colors.card,
       borderWidth: 1,
@@ -262,7 +292,7 @@ export default function MapScreen() {
 
   return (
     <View style={s.container}>
-      <HelferMap
+      <WaslaMap
         mapRef={mapRef}
         currentLat={currentLocation?.lat}
         currentLng={currentLocation?.lng}
@@ -272,12 +302,12 @@ export default function MapScreen() {
 
       <View style={s.topBar}>
         <View style={s.titleCard}>
-          <Text style={s.titleText}>Helfer</Text>
+          <Text style={s.titleText}>Wasla</Text>
           <Text style={s.subtitleText}>
             {isTracking
               ? currentLocation
                 ? `${formatSpeed(currentLocation.speed)} · Sharing`
-                : "Getting location..."
+                : "Getting location…"
               : "Tracking off"}
           </Text>
         </View>

@@ -25,30 +25,30 @@ function formatSpeed(kmh: number): string {
   return `${Math.round(kmh)} km/h`;
 }
 
-export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
+export default function WaslaMap({ mapRef, isTracking, clusters }: Props) {
   const colors = useColors();
 
   const s = StyleSheet.create({
     map: { flex: 1 },
     markerWrap: {
       backgroundColor: colors.card,
-      borderRadius: 10,
-      padding: 8,
+      borderRadius: 12,
+      padding: 10,
       alignItems: "center",
-      minWidth: 80,
+      minWidth: 88,
       borderWidth: 1,
-      borderColor: colors.primary + "55",
+      borderColor: colors.border,
       shadowColor: "#000",
-      shadowOpacity: 0.3,
-      shadowRadius: 4,
-      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.12,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 3 },
       elevation: 4,
     },
     markerTitle: {
       fontFamily: "Inter_700Bold",
       fontSize: 12,
       color: colors.foreground,
-      marginTop: 2,
+      marginTop: 3,
     },
     markerSub: {
       fontFamily: "Inter_400Regular",
@@ -67,43 +67,32 @@ export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
       position: "absolute",
       bottom: 160,
       right: 12,
-      backgroundColor: colors.card + "F2",
-      borderRadius: 12,
-      padding: 10,
-      gap: 6,
+      backgroundColor: colors.card,
+      borderRadius: 14,
+      padding: 12,
+      gap: 7,
       borderWidth: 1,
       borderColor: colors.border,
-      maxWidth: 200,
+      maxWidth: 210,
+      shadowColor: "#000",
+      shadowOpacity: 0.08,
+      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 4 },
+      elevation: 3,
     },
     legendTitle: {
       fontFamily: "Inter_600SemiBold",
       fontSize: 10,
       color: colors.mutedForeground,
       textTransform: "uppercase",
-      letterSpacing: 0.5,
+      letterSpacing: 0.8,
       marginBottom: 2,
     },
-    legendRow: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 6,
-    },
-    legendLine: {
-      width: 18,
-      height: 3,
-      borderRadius: 2,
-    },
+    legendRow: { flexDirection: "row", alignItems: "center", gap: 7 },
+    legendLine: { width: 20, height: 3, borderRadius: 2 },
     legendTextWrap: { flex: 1 },
-    legendPath: {
-      fontFamily: "Inter_700Bold",
-      fontSize: 10,
-      color: colors.foreground,
-    },
-    legendRefs: {
-      fontFamily: "Inter_400Regular",
-      fontSize: 9,
-      color: colors.mutedForeground,
-    },
+    legendPath: { fontFamily: "Inter_700Bold", fontSize: 10, color: colors.foreground },
+    legendRefs: { fontFamily: "Inter_400Regular", fontSize: 9, color: colors.mutedForeground },
   });
 
   return (
@@ -134,7 +123,7 @@ export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
           />
         ))}
 
-        {/* Bus stop markers (one per unique stop, coloured by route) */}
+        {/* Bus stop markers */}
         {DJERBA_BUS_ROUTES.flatMap((route) =>
           route.stops.map((stop) => (
             <Marker
@@ -156,8 +145,8 @@ export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
             <Circle
               center={{ latitude: cluster.lat, longitude: cluster.lng }}
               radius={60}
-              fillColor={colors.primary + "2A"}
-              strokeColor={colors.primary + "99"}
+              fillColor={colors.primary + "25"}
+              strokeColor={colors.primary + "88"}
               strokeWidth={2}
             />
             <Marker
@@ -175,7 +164,7 @@ export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
         ))}
       </MapView>
 
-      {/* Route legend — all paths and their SRTM refs */}
+      {/* Route legend */}
       <View style={s.legend}>
         <Text style={s.legendTitle}>SRTM routes</Text>
         {DJERBA_BUS_ROUTES.map((route) => (
