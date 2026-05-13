@@ -118,37 +118,84 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
     },
     routeCard: {
       backgroundColor: colors.card,
-      borderRadius: 12,
+      borderRadius: 14,
       borderWidth: 1,
       borderColor: colors.border,
+      overflow: "hidden",
+    },
+    routeColorBar: {
+      height: 3,
+      width: "100%",
+    },
+    routeBody: {
       padding: 12,
       gap: 8,
     },
-    routeHeader: { flexDirection: "row", alignItems: "center", gap: 8 },
-    routeBar: { width: 4, height: 22, borderRadius: 2 },
+    routeHeader: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: 8,
+    },
+    routePathBadge: {
+      width: 26,
+      height: 26,
+      borderRadius: 8,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    routePathText: {
+      fontFamily: "Inter_700Bold",
+      fontSize: 13,
+      color: "#fff",
+    },
+    routeInfo: { flex: 1 },
     routeName: {
       fontFamily: "Inter_600SemiBold",
       fontSize: 14,
       color: colors.foreground,
-      flex: 1,
+      lineHeight: 18,
     },
-    routeRef: {
-      fontFamily: "Inter_400Regular",
-      fontSize: 11,
-      color: colors.mutedForeground,
+    routeRefsRow: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: 4,
+      marginTop: 4,
     },
-    stopsScroll: { flexDirection: "row", gap: 0 },
-    stopItem: { flexDirection: "row", alignItems: "center", gap: 2 },
-    stopDot: { width: 7, height: 7, borderRadius: 4 },
-    stopArrow: {
+    refChip: {
+      paddingHorizontal: 6,
+      paddingVertical: 2,
+      borderRadius: 5,
+    },
+    refChipText: {
+      fontFamily: "Inter_600SemiBold",
       fontSize: 10,
-      color: colors.border,
-      marginHorizontal: 2,
+      color: "#fff",
+    },
+    stopsRow: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      alignItems: "center",
+      gap: 2,
+    },
+    stopItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 2,
+    },
+    stopDot: {
+      width: 6,
+      height: 6,
+      borderRadius: 3,
     },
     stopText: {
       fontFamily: "Inter_400Regular",
       fontSize: 11,
       color: colors.mutedForeground,
+    },
+    stopArrow: {
+      fontSize: 10,
+      color: colors.border,
+      marginHorizontal: 1,
     },
     dataSource: {
       fontFamily: "Inter_400Regular",
@@ -156,7 +203,7 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
       color: colors.mutedForeground,
       textAlign: "center",
       marginTop: 4,
-      paddingHorizontal: 8,
+      lineHeight: 17,
     },
   });
 
@@ -218,38 +265,52 @@ export default function HelferMap({ clusters, isTracking, currentLat, currentLng
           ))
         )}
 
-        {/* SRTM routes */}
+        {/* All SRTM routes */}
         <Text style={[s.sectionLabel, { marginTop: 8 }]}>
-          SRTM bus routes · Djerba island
+          SRTM routes · {DJERBA_BUS_ROUTES.reduce((n, r) => n + r.refs.length, 0)} lines · {DJERBA_BUS_ROUTES.length} unique island paths
         </Text>
+
         {DJERBA_BUS_ROUTES.map((route) => (
           <View key={route.id} style={s.routeCard}>
-            <View style={s.routeHeader}>
-              <View style={[s.routeBar, { backgroundColor: route.color }]} />
-              <View style={{ flex: 1 }}>
-                <Text style={s.routeName}>{route.name}</Text>
-                <Text style={s.routeRef}>Ref: {route.ref}</Text>
-              </View>
-              <Text style={[s.routeRef, { color: route.color, fontFamily: "Inter_700Bold" }]}>
-                {route.shortName}
-              </Text>
-            </View>
-            <View style={s.stopsScroll}>
-              {route.stops.map((stop, i) => (
-                <View key={stop.code} style={s.stopItem}>
-                  <View style={[s.stopDot, { backgroundColor: route.color }]} />
-                  <Text style={s.stopText}>{stop.nameFr}</Text>
-                  {i < route.stops.length - 1 && (
-                    <Text style={s.stopArrow}>›</Text>
-                  )}
+            <View style={[s.routeColorBar, { backgroundColor: route.color }]} />
+            <View style={s.routeBody}>
+              <View style={s.routeHeader}>
+                <View style={[s.routePathBadge, { backgroundColor: route.color }]}>
+                  <Text style={s.routePathText}>{route.shortName}</Text>
                 </View>
-              ))}
+                <View style={s.routeInfo}>
+                  <Text style={s.routeName}>{route.name}</Text>
+                  <View style={s.routeRefsRow}>
+                    {route.refs.map((ref) => (
+                      <View
+                        key={ref}
+                        style={[s.refChip, { backgroundColor: route.color + "CC" }]}
+                      >
+                        <Text style={s.refChipText}>{ref}</Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              </View>
+
+              <View style={s.stopsRow}>
+                {route.stops.map((stop, i) => (
+                  <View key={stop.code} style={s.stopItem}>
+                    <View style={[s.stopDot, { backgroundColor: route.color }]} />
+                    <Text style={s.stopText}>{stop.nameFr}</Text>
+                    {i < route.stops.length - 1 && (
+                      <Text style={s.stopArrow}>›</Text>
+                    )}
+                  </View>
+                ))}
+              </View>
             </View>
           </View>
         ))}
 
         <Text style={s.dataSource}>
-          Station coordinates: Tunisian Open Transport Data (data.transport.tn) · SRTM official dataset
+          Station GPS: Tunisian Open Transport Data (catalogue-data.transport.tn){"\n"}
+          Stop sequences: SRTM schedules XLSX — all 8 agency sheets analysed
         </Text>
       </ScrollView>
     </View>

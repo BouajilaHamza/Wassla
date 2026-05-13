@@ -67,12 +67,21 @@ export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
       position: "absolute",
       bottom: 160,
       right: 12,
-      backgroundColor: colors.card + "F0",
-      borderRadius: 10,
+      backgroundColor: colors.card + "F2",
+      borderRadius: 12,
       padding: 10,
-      gap: 5,
+      gap: 6,
       borderWidth: 1,
       borderColor: colors.border,
+      maxWidth: 200,
+    },
+    legendTitle: {
+      fontFamily: "Inter_600SemiBold",
+      fontSize: 10,
+      color: colors.mutedForeground,
+      textTransform: "uppercase",
+      letterSpacing: 0.5,
+      marginBottom: 2,
     },
     legendRow: {
       flexDirection: "row",
@@ -84,10 +93,16 @@ export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
       height: 3,
       borderRadius: 2,
     },
-    legendText: {
-      fontFamily: "Inter_400Regular",
+    legendTextWrap: { flex: 1 },
+    legendPath: {
+      fontFamily: "Inter_700Bold",
       fontSize: 10,
       color: colors.foreground,
+    },
+    legendRefs: {
+      fontFamily: "Inter_400Regular",
+      fontSize: 9,
+      color: colors.mutedForeground,
     },
   });
 
@@ -99,13 +114,13 @@ export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
         provider={PROVIDER_DEFAULT}
         initialRegion={{
           ...DJERBA_CENTER,
-          latitudeDelta: 0.28,
-          longitudeDelta: 0.28,
+          latitudeDelta: 0.30,
+          longitudeDelta: 0.30,
         }}
         showsUserLocation={isTracking}
         showsMyLocationButton={false}
       >
-        {/* SRTM bus route polylines — stop coordinates from official dataset */}
+        {/* SRTM bus route polylines — all 5 unique island paths */}
         {DJERBA_BUS_ROUTES.map((route) => (
           <Polyline
             key={route.id}
@@ -114,12 +129,12 @@ export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
               longitude: s.lng,
             }))}
             strokeColor={route.color}
-            strokeWidth={3}
+            strokeWidth={3.5}
             lineDashPattern={[1]}
           />
         ))}
 
-        {/* Bus stop markers */}
+        {/* Bus stop markers (one per unique stop, coloured by route) */}
         {DJERBA_BUS_ROUTES.flatMap((route) =>
           route.stops.map((stop) => (
             <Marker
@@ -160,14 +175,18 @@ export default function HelferMap({ mapRef, isTracking, clusters }: Props) {
         ))}
       </MapView>
 
-      {/* Route legend */}
+      {/* Route legend — all paths and their SRTM refs */}
       <View style={s.legend}>
+        <Text style={s.legendTitle}>SRTM routes</Text>
         {DJERBA_BUS_ROUTES.map((route) => (
           <View key={route.id} style={s.legendRow}>
             <View style={[s.legendLine, { backgroundColor: route.color }]} />
-            <Text style={s.legendText}>
-              {route.shortName} · {route.stops[0].nameFr} → {route.stops[route.stops.length - 1].nameFr}
-            </Text>
+            <View style={s.legendTextWrap}>
+              <Text style={s.legendPath}>
+                {route.shortName} · {route.stops[0].nameFr} → {route.stops[route.stops.length - 1].nameFr}
+              </Text>
+              <Text style={s.legendRefs}>{route.refs.join(" · ")}</Text>
+            </View>
           </View>
         ))}
       </View>
