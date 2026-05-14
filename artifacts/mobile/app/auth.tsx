@@ -1,6 +1,7 @@
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { useRef, useState } from "react";
+import WaslaLogo from "@/components/WaslaLogo";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -57,25 +58,31 @@ export default function AuthScreen() {
     wordmarkWrap: {
       marginBottom: 40,
     },
+    logoRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 16,
+      marginBottom: 20,
+    },
     wordmark: {
-      fontSize: 48,
+      fontSize: 42,
       fontFamily: "Inter_700Bold",
-      color: colors.primary,
-      letterSpacing: -2,
+      color: colors.foreground,
+      letterSpacing: -1.5,
     },
     wordmarkAr: {
-      fontSize: 17,
+      fontSize: 15,
       fontFamily: "Inter_400Regular",
       color: colors.mutedForeground,
       marginTop: 2,
-      letterSpacing: 1,
+      letterSpacing: 0.8,
     },
     divider: {
       width: 36,
       height: 2,
       backgroundColor: colors.primary,
       borderRadius: 1,
-      marginTop: 16,
+      marginTop: 4,
       marginBottom: 20,
     },
     subtitle: {
@@ -159,8 +166,13 @@ export default function AuthScreen() {
     >
       <View style={s.inner}>
         <View style={s.wordmarkWrap}>
-          <Text style={s.wordmark}>Wasla</Text>
-          <Text style={s.wordmarkAr}>وصلة · Connecting Djerba</Text>
+          <View style={s.logoRow}>
+            <WaslaLogo size={56} color={colors.primary} />
+            <View>
+              <Text style={s.wordmark}>Wasla</Text>
+              <Text style={s.wordmarkAr}>وصلة · Connecting Djerba</Text>
+            </View>
+          </View>
           <View style={s.divider} />
           <Text style={s.subtitle}>
             Help map Djerba's buses anonymously.{"\n"}Share your location passively and earn points while improving transit for everyone.
