@@ -3,6 +3,7 @@ name: Flutter CI/CD
 on:
   push:
     branches:
+      - main
       - master
       - dev
       - 'refactor/**'
@@ -10,6 +11,7 @@ on:
       - 'fix/**'
   pull_request:
     branches:
+      - main
       - master
       - dev
 
