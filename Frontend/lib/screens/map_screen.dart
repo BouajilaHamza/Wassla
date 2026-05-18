@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -16,7 +15,8 @@ class MapScreen extends StatefulWidget {
   State<MapScreen> createState() => _MapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMixin {
+class _MapScreenState extends State<MapScreen>
+    with SingleTickerProviderStateMixin {
   final MapController _mapController = MapController();
   late AnimationController _pulseController;
 
@@ -56,14 +56,16 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              initialCenter: LatLng(locationProvider.userLat, locationProvider.userLng),
+              initialCenter:
+                  LatLng(locationProvider.userLat, locationProvider.userLng),
               initialZoom: 13.5,
               minZoom: 10.0,
               maxZoom: 18.0,
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+                urlTemplate:
+                    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
                 subdomains: const ['a', 'b', 'c', 'd'],
                 userAgentPackageName: 'com.wassla.app',
               ),
@@ -73,7 +75,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                   Marker(
                     width: 60,
                     height: 60,
-                    point: LatLng(locationProvider.userLat, locationProvider.userLng),
+                    point: LatLng(
+                        locationProvider.userLat, locationProvider.userLng),
                     child: AnimatedBuilder(
                       animation: _pulseController,
                       builder: (context, child) {
@@ -85,7 +88,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                               height: 12 + (40 * _pulseController.value),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: const Color(0xFF111111).withOpacity(0.1 * (1 - _pulseController.value)),
+                                color: const Color(0xFF111111).withValues(
+                                    alpha: 0.1 * (1 - _pulseController.value)),
                               ),
                             ),
                             Container(
@@ -94,10 +98,11 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: const Color(0xFF111111),
-                                border: Border.all(color: Colors.white, width: 2),
+                                border:
+                                    Border.all(color: Colors.white, width: 2),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
+                                    color: Colors.black.withValues(alpha: 0.1),
                                     blurRadius: 10,
                                   )
                                 ],
@@ -128,10 +133,11 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Colors.white,
-                                border: Border.all(color: const Color(0xFF111111), width: 1.5),
+                                border: Border.all(
+                                    color: const Color(0xFF111111), width: 1.5),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.04),
+                                    color: Colors.black.withValues(alpha: 0.04),
                                     blurRadius: 12,
                                     spreadRadius: 4,
                                   )
@@ -147,7 +153,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                               top: 0,
                               right: 0,
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF111111),
                                   borderRadius: BorderRadius.circular(10),
@@ -221,10 +228,11 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF111111).withOpacity(0.05)),
+        border:
+            Border.all(color: const Color(0xFF111111).withValues(alpha: 0.05)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 20,
           )
         ],
@@ -294,7 +302,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       children: [
         GestureDetector(
           onTap: () {
-            _mapController.move(LatLng(provider.userLat, provider.userLng), 14.0);
+            _mapController.move(
+                LatLng(provider.userLat, provider.userLng), 14.0);
           },
           child: Container(
             width: 40,
@@ -302,15 +311,17 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF111111).withOpacity(0.05)),
+              border: Border.all(
+                  color: const Color(0xFF111111).withValues(alpha: 0.05)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 10,
                 )
               ],
             ),
-            child: const Icon(Icons.near_me_rounded, size: 18, color: Color(0xFF111111)),
+            child: const Icon(Icons.near_me_rounded,
+                size: 18, color: Color(0xFF111111)),
           ),
         ),
         const SizedBox(height: 12),
@@ -319,12 +330,15 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: provider.isSimulatingRide ? const Color(0xFF111111) : Colors.white,
+              color: provider.isSimulatingRide
+                  ? const Color(0xFF111111)
+                  : Colors.white,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFF111111).withOpacity(0.05)),
+              border: Border.all(
+                  color: const Color(0xFF111111).withValues(alpha: 0.05)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 10,
                 )
               ],
@@ -333,9 +347,13 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  provider.isSimulatingRide ? Icons.auto_mode_rounded : Icons.play_arrow_rounded,
+                  provider.isSimulatingRide
+                      ? Icons.auto_mode_rounded
+                      : Icons.play_arrow_rounded,
                   size: 16,
-                  color: provider.isSimulatingRide ? Colors.white : const Color(0xFF111111),
+                  color: provider.isSimulatingRide
+                      ? Colors.white
+                      : const Color(0xFF111111),
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -343,7 +361,9 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                   style: GoogleFonts.inter(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
-                    color: provider.isSimulatingRide ? Colors.white : const Color(0xFF111111),
+                    color: provider.isSimulatingRide
+                        ? Colors.white
+                        : const Color(0xFF111111),
                   ),
                 ),
               ],
@@ -365,7 +385,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
           children: [
             Row(
               children: [
-                const Icon(Icons.sensors_rounded, color: Color(0xFF111111), size: 24),
+                const Icon(Icons.sensors_rounded,
+                    color: Color(0xFF111111), size: 24),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -377,7 +398,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.5,
-                          color: const Color(0xFF111111).withOpacity(0.4),
+                          color: const Color(0xFF111111).withValues(alpha: 0.4),
                         ),
                       ),
                       Text(
@@ -397,7 +418,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
             Text(
               'Are you currently on this bus? Confirm to help the community.',
               style: GoogleFonts.inter(
-                color: const Color(0xFF111111).withOpacity(0.6),
+                color: const Color(0xFF111111).withValues(alpha: 0.6),
                 fontSize: 13,
               ),
             ),
@@ -408,11 +429,17 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                   child: OutlinedButton(
                     onPressed: () => provider.confirmPresence(false),
                     style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: const Color(0xFF111111).withOpacity(0.1)),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      side: BorderSide(
+                          color:
+                              const Color(0xFF111111).withValues(alpha: 0.1)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),
-                    child: Text('NO', style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: const Color(0xFF111111))),
+                    child: Text('NO',
+                        style: GoogleFonts.inter(
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF111111))),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -438,7 +465,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 40,
           )
         ],
@@ -452,7 +479,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
               width: 32,
               height: 4,
               decoration: BoxDecoration(
-                color: const Color(0xFF111111).withOpacity(0.1),
+                color: const Color(0xFF111111).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -472,7 +499,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.5,
-                        color: const Color(0xFF111111).withOpacity(0.4),
+                        color: const Color(0xFF111111).withValues(alpha: 0.4),
                       ),
                     ),
                     Text(
@@ -488,7 +515,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                 Switch.adaptive(
                   value: provider.isTracking,
                   onChanged: (_) => provider.toggleTracking(),
-                  activeColor: const Color(0xFF111111),
+                  activeTrackColor: const Color(0xFF111111),
                 ),
               ],
             ),
@@ -502,7 +529,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                       style: GoogleFonts.inter(
                         fontSize: 11,
                         letterSpacing: 1.5,
-                        color: const Color(0xFF111111).withOpacity(0.2),
+                        color: const Color(0xFF111111).withValues(alpha: 0.2),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -536,7 +563,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
         decoration: BoxDecoration(
           color: const Color(0xFFFAFAFA),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFF111111).withOpacity(0.05)),
+          border: Border.all(
+              color: const Color(0xFF111111).withValues(alpha: 0.05)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -545,13 +573,14 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.sensors_rounded, size: 16, color: Color(0xFF111111)),
+                const Icon(Icons.sensors_rounded,
+                    size: 16, color: Color(0xFF111111)),
                 Text(
                   '${bus.userCount} TRK',
                   style: GoogleFonts.inter(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF111111).withOpacity(0.4),
+                    color: const Color(0xFF111111).withValues(alpha: 0.4),
                   ),
                 ),
               ],
@@ -575,7 +604,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                   style: GoogleFonts.inter(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF111111).withOpacity(0.3),
+                    color: const Color(0xFF111111).withValues(alpha: 0.3),
                   ),
                 ),
               ],
@@ -591,7 +620,8 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(32))),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32))),
       builder: (context) {
         return SafeArea(
           child: Padding(
@@ -606,7 +636,7 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.5,
-                    color: const Color(0xFF111111).withOpacity(0.4),
+                    color: const Color(0xFF111111).withValues(alpha: 0.4),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -619,11 +649,14 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
                   ),
                 ),
                 const SizedBox(height: 24),
-                _buildModalRow(Icons.speed_rounded, 'VELOCITY', '${bus.speed.toStringAsFixed(0)} KM/H'),
+                _buildModalRow(Icons.speed_rounded, 'VELOCITY',
+                    '${bus.speed.toStringAsFixed(0)} KM/H'),
                 const Divider(height: 24),
-                _buildModalRow(Icons.people_rounded, 'ACTIVE TRACKERS', '${bus.userCount} PASSENGERS'),
+                _buildModalRow(Icons.people_rounded, 'ACTIVE TRACKERS',
+                    '${bus.userCount} PASSENGERS'),
                 const Divider(height: 24),
-                _buildModalRow(Icons.verified_user_rounded, 'CONFIDENCE', '98.5%'),
+                _buildModalRow(
+                    Icons.verified_user_rounded, 'CONFIDENCE', '98.5%'),
                 const SizedBox(height: 32),
                 SizedBox(
                   width: double.infinity,
@@ -646,14 +679,16 @@ class _MapScreenState extends State<MapScreen> with SingleTickerProviderStateMix
       children: [
         Row(
           children: [
-            Icon(icon, color: const Color(0xFF111111).withOpacity(0.3), size: 18),
+            Icon(icon,
+                color: const Color(0xFF111111).withValues(alpha: 0.3),
+                size: 18),
             const SizedBox(width: 12),
             Text(
               label,
               style: GoogleFonts.inter(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF111111).withOpacity(0.4),
+                color: const Color(0xFF111111).withValues(alpha: 0.4),
               ),
             ),
           ],

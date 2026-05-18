@@ -66,7 +66,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     border: Border.all(color: obsidianBlack, width: 2),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
+                        color: Colors.black.withValues(alpha: 0.04),
                         blurRadius: 16,
                       ),
                     ],
@@ -79,7 +79,9 @@ class _AuthScreenState extends State<AuthScreen> {
                         height: 60,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: obsidianBlack.withOpacity(0.12), width: 1.5),
+                          border: Border.all(
+                              color: obsidianBlack.withValues(alpha: 0.12),
+                              width: 1.5),
                         ),
                       ),
                       Container(
@@ -87,7 +89,9 @@ class _AuthScreenState extends State<AuthScreen> {
                         height: 42,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: obsidianBlack.withOpacity(0.24), width: 1.5),
+                          border: Border.all(
+                              color: obsidianBlack.withValues(alpha: 0.24),
+                              width: 1.5),
                         ),
                       ),
                       const Icon(
@@ -117,7 +121,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   'Djerba\'s real-time transit pulse.',
                   style: GoogleFonts.inter(
                     fontSize: 15,
-                    color: obsidianBlack.withOpacity(0.5),
+                    color: obsidianBlack.withValues(alpha: 0.5),
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
@@ -131,10 +135,11 @@ class _AuthScreenState extends State<AuthScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(28),
-                    border: Border.all(color: obsidianBlack.withOpacity(0.05)),
+                    border: Border.all(
+                        color: obsidianBlack.withValues(alpha: 0.05)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.03),
+                        color: Colors.black.withValues(alpha: 0.03),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
@@ -149,7 +154,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.5,
-                          color: obsidianBlack.withOpacity(0.4),
+                          color: obsidianBlack.withValues(alpha: 0.4),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -163,8 +168,10 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                         decoration: InputDecoration(
                           hintText: '00 000 000',
-                          hintStyle: GoogleFonts.inter(color: obsidianBlack.withOpacity(0.2)),
-                          prefixIcon: const Icon(Icons.phone_rounded, size: 20, color: obsidianBlack),
+                          hintStyle: GoogleFonts.inter(
+                              color: obsidianBlack.withValues(alpha: 0.2)),
+                          prefixIcon: const Icon(Icons.phone_rounded,
+                              size: 20, color: obsidianBlack),
                         ),
                       ),
                       const SizedBox(height: 28),
@@ -178,7 +185,8 @@ class _AuthScreenState extends State<AuthScreen> {
                               ? const SizedBox(
                                   width: 20,
                                   height: 20,
-                                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                      color: Colors.white, strokeWidth: 2),
                                 )
                               : const Text('ENTER RADAR'),
                         ),
@@ -193,7 +201,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   'Community-powered intelligence.',
                   style: GoogleFonts.inter(
                     fontSize: 12,
-                    color: obsidianBlack.withOpacity(0.3),
+                    color: obsidianBlack.withValues(alpha: 0.3),
                     fontWeight: FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,

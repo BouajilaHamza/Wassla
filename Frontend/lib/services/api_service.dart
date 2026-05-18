@@ -66,13 +66,14 @@ class ApiService {
       return response.statusCode == 200 || response.statusCode == 201;
     } catch (e) {
       // Offline fallback: Log locally
-      print('API Error posting location: $e');
+      debugPrint('API Error posting location: $e');
       return false;
     }
   }
 
   // Get active bus clusters (with beautiful real-time simulator fallback)
-  Future<List<BusCluster>> getClusters({double? userLat, double? userLng}) async {
+  Future<List<BusCluster>> getClusters(
+      {double? userLat, double? userLng}) async {
     try {
       final response = await _dio.get('/clusters');
       if (response.statusCode == 200 && response.data != null) {
@@ -81,7 +82,7 @@ class ApiService {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('[DEV] Backend offline — using local bus simulator: $e');
+        debugPrint('[DEV] Backend offline — using local bus simulator: $e');
         // Fallback: Generate real-time moving buses on Djerba routes (dev only)
         return _generateSimulatedClusters(userLat, userLng);
       }
@@ -100,13 +101,14 @@ class ApiService {
       });
       return response.statusCode == 200;
     } catch (e) {
-      print('API Error confirming bus: $e');
+      debugPrint('API Error confirming bus: $e');
       return true; // Mock success in development
     }
   }
 
   // Core simulator math to create animated, moving buses
-  List<BusCluster> _generateSimulatedClusters(double? userLat, double? userLng) {
+  List<BusCluster> _generateSimulatedClusters(
+      double? userLat, double? userLng) {
     final List<BusCluster> clusters = [];
     final Random random = Random();
 
@@ -132,15 +134,18 @@ class ApiService {
       final double progress = _simulationProgress[i];
       final int segmentCount = route.length - 1;
       final double scaledProgress = progress * segmentCount;
-      final int currentSegmentIndex = scaledProgress.floor().clamp(0, segmentCount - 1);
+      final int currentSegmentIndex =
+          scaledProgress.floor().clamp(0, segmentCount - 1);
       final double segmentProgress = scaledProgress - currentSegmentIndex;
 
       final start = route[currentSegmentIndex];
       final end = route[currentSegmentIndex + 1];
 
       // Interpolate lat/lng
-      final double lat = start['lat']! + (end['lat']! - start['lat']!) * segmentProgress;
-      final double lng = start['lng']! + (end['lng']! - start['lng']!) * segmentProgress;
+      final double lat =
+          start['lat']! + (end['lat']! - start['lat']!) * segmentProgress;
+      final double lng =
+          start['lng']! + (end['lng']! - start['lng']!) * segmentProgress;
 
       // Calculate bearing/heading
       final double dy = end['lat']! - start['lat']!;
@@ -155,7 +160,7 @@ class ApiService {
         lat: lat,
         lng: lng,
         speed: 35.0 + random.nextInt(15), // speed in km/h
-        userCount: 3 + random.nextInt(6),  // 3 to 8 community trackers detected
+        userCount: 3 + random.nextInt(6), // 3 to 8 community trackers detected
         routeName: name,
         heading: heading,
       ));

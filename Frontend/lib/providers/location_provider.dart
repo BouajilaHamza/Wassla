@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import '../models/cluster.dart';
 import '../services/api_service.dart';
 
@@ -107,8 +106,10 @@ class LocationProvider extends ChangeNotifier {
       if (_confirmedClusterIds.contains(bus.id)) continue;
 
       // Distance calculation (haversine)
-      final double distance = _calculateDistance(_userLat, _userLng, bus.lat, bus.lng);
-      if (distance <= 40.0) { // inside 40 meters
+      final double distance =
+          _calculateDistance(_userLat, _userLng, bus.lat, bus.lng);
+      if (distance <= 40.0) {
+        // inside 40 meters
         _nearbyClusterToConfirm = bus;
         notifyListeners();
         break;
@@ -116,13 +117,16 @@ class LocationProvider extends ChangeNotifier {
     }
   }
 
-  double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+  double _calculateDistance(
+      double lat1, double lon1, double lat2, double lon2) {
     const double r = 6371000; // Earth radius in meters
     final double dLat = (lat2 - lat1) * pi / 180;
     final double dLon = (lon2 - lon1) * pi / 180;
     final double a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(lat1 * pi / 180) * cos(lat2 * pi / 180) *
-        sin(dLon / 2) * sin(dLon / 2);
+        cos(lat1 * pi / 180) *
+            cos(lat2 * pi / 180) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
     final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
     return r * c;
   }
@@ -175,7 +179,8 @@ class LocationProvider extends ChangeNotifier {
       double targetLng = 10.9950;
       double speedFactor = 0.0003; // speed of simulation
 
-      _simulationTimer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
+      _simulationTimer =
+          Timer.periodic(const Duration(milliseconds: 200), (timer) {
         if (!_isSimulatingRide) {
           timer.cancel();
           return;

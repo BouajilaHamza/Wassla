@@ -34,8 +34,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: obsidianBlack,
           primary: obsidianBlack,
-          surface: Colors.white,
-          background: alabasterWhite,
+          surface: alabasterWhite,
           onPrimary: Colors.white,
           onSurface: obsidianBlack,
         ),
@@ -76,23 +75,25 @@ class MyApp extends StatelessWidget {
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: obsidianBlack.withOpacity(0.1)),
+            borderSide: BorderSide(color: obsidianBlack.withValues(alpha: 0.1)),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: obsidianBlack, width: 1.5),
           ),
-          hintStyle: GoogleFonts.inter(color: obsidianBlack.withOpacity(0.3)),
+          hintStyle:
+              GoogleFonts.inter(color: obsidianBlack.withValues(alpha: 0.3)),
         ),
         cardTheme: CardThemeData(
           color: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
-            side: BorderSide(color: obsidianBlack.withOpacity(0.05)),
+            side: BorderSide(color: obsidianBlack.withValues(alpha: 0.05)),
           ),
         ),
       ),

@@ -16,14 +16,16 @@ class _RewardsScreenState extends State<RewardsScreen> {
       'id': 'v_houmt_souk',
       'title': 'HOUMT SOUK LOCAL',
       'points': 50,
-      'description': 'Valid for any single transit route within Houmt Souk municipality.',
+      'description':
+          'Valid for any single transit route within Houmt Souk municipality.',
       'icon': Icons.confirmation_number_rounded,
     },
     {
       'id': 'v_midoun_transit',
       'title': 'MIDOUN TRANSIT PASS',
       'points': 75,
-      'description': 'Valid for one transit trip on the Houmt Souk ⇆ Midoun line.',
+      'description':
+          'Valid for one transit trip on the Houmt Souk ⇆ Midoun line.',
       'icon': Icons.local_activity_rounded,
     },
     {
@@ -44,7 +46,8 @@ class _RewardsScreenState extends State<RewardsScreen> {
     if (provider.userPoints < pointsNeeded) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Insufficient points for this transit pass.', style: GoogleFonts.inter()),
+          content: Text('Insufficient points for this transit pass.',
+              style: GoogleFonts.inter()),
           backgroundColor: const Color(0xFF111111),
         ),
       );
@@ -52,7 +55,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
     }
 
     final String code = 'WSSLA-${1000 + (id.hashCode % 9000)}';
-    
+
     setState(() {
       _redeemedVouchers[id] = code;
     });
@@ -61,7 +64,8 @@ class _RewardsScreenState extends State<RewardsScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Successfully redeemed ${voucher['title']}.', style: GoogleFonts.inter()),
+        content: Text('Successfully redeemed ${voucher['title']}.',
+            style: GoogleFonts.inter()),
         backgroundColor: const Color(0xFF111111),
       ),
     );
@@ -73,7 +77,9 @@ class _RewardsScreenState extends State<RewardsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('REWARDS', style: GoogleFonts.outfit(fontWeight: FontWeight.bold, letterSpacing: 2)),
+        title: Text('REWARDS',
+            style: GoogleFonts.outfit(
+                fontWeight: FontWeight.bold, letterSpacing: 2)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -85,22 +91,21 @@ class _RewardsScreenState extends State<RewardsScreen> {
           children: [
             _buildPointsBalanceCard(locationProvider),
             const SizedBox(height: 48),
-
             Text(
               'TRANSIT PASSES',
               style: GoogleFonts.inter(
                 fontSize: 11,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.5,
-                color: const Color(0xFF111111).withOpacity(0.4),
+                color: const Color(0xFF111111).withValues(alpha: 0.4),
               ),
             ),
             const SizedBox(height: 24),
-
             ..._vouchers.map((voucher) {
               final id = voucher['id'] as String;
               final redeemedCode = _redeemedVouchers[id];
-              return _buildVoucherCard(context, voucher, redeemedCode, () => _handleRedeem(locationProvider, voucher));
+              return _buildVoucherCard(context, voucher, redeemedCode,
+                  () => _handleRedeem(locationProvider, voucher));
             }),
           ],
         ),
@@ -118,7 +123,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 30,
             offset: const Offset(0, 15),
           ),
@@ -130,7 +135,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
           Text(
             'CURRENT BALANCE',
             style: GoogleFonts.inter(
-              color: Colors.white.withOpacity(0.4),
+              color: Colors.white.withValues(alpha: 0.4),
               fontSize: 10,
               fontWeight: FontWeight.bold,
               letterSpacing: 2,
@@ -153,7 +158,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
               Text(
                 'PTS',
                 style: GoogleFonts.inter(
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white.withValues(alpha: 0.3),
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -167,7 +172,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
               Text(
                 'NEXT MILESTONE',
                 style: GoogleFonts.inter(
-                  color: Colors.white.withOpacity(0.4),
+                  color: Colors.white.withValues(alpha: 0.4),
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
                 ),
@@ -187,7 +192,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
             borderRadius: BorderRadius.circular(2),
             child: LinearProgressIndicator(
               value: progress,
-              backgroundColor: Colors.white.withOpacity(0.1),
+              backgroundColor: Colors.white.withValues(alpha: 0.1),
               valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
               minHeight: 4,
             ),
@@ -211,7 +216,8 @@ class _RewardsScreenState extends State<RewardsScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF111111).withOpacity(0.05)),
+        border:
+            Border.all(color: const Color(0xFF111111).withValues(alpha: 0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +239,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF111111).withOpacity(0.4),
+                    color: const Color(0xFF111111).withValues(alpha: 0.4),
                   ),
                 ),
             ],
@@ -243,7 +249,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
             voucher['description'] as String,
             style: GoogleFonts.inter(
               fontSize: 13,
-              color: const Color(0xFF111111).withOpacity(0.5),
+              color: const Color(0xFF111111).withValues(alpha: 0.5),
               height: 1.4,
             ),
           ),
@@ -255,7 +261,8 @@ class _RewardsScreenState extends State<RewardsScreen> {
               decoration: BoxDecoration(
                 color: const Color(0xFFFAFAFA),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: const Color(0xFF111111).withOpacity(0.1)),
+                border: Border.all(
+                    color: const Color(0xFF111111).withValues(alpha: 0.1)),
               ),
               child: Column(
                 children: [
@@ -265,7 +272,7 @@ class _RewardsScreenState extends State<RewardsScreen> {
                       fontSize: 9,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1,
-                      color: const Color(0xFF111111).withOpacity(0.4),
+                      color: const Color(0xFF111111).withValues(alpha: 0.4),
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -289,7 +296,8 @@ class _RewardsScreenState extends State<RewardsScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFAFAFA),
                   foregroundColor: const Color(0xFF111111),
-                  side: BorderSide(color: const Color(0xFF111111).withOpacity(0.1)),
+                  side: BorderSide(
+                      color: const Color(0xFF111111).withValues(alpha: 0.1)),
                 ),
                 child: const Text('REDEEM PASS'),
               ),
