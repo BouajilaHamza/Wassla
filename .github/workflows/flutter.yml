@@ -1,0 +1,116 @@
+name: Flutter CI/CD
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+      - 'refactor/**'
+      - 'feat/**'
+      - 'fix/**'
+  pull_request:
+    branches:
+      - master
+      - dev
+
+jobs:
+  # ── Lint & Analyze Job ──────────────────────────────────────
+  lint:
+    name: Lint & Analyze
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        working-directory: Frontend
+        run: flutter pub get
+
+      - name: Format check
+        working-directory: Frontend
+        run: dart format --set-exit-if-changed lib/
+
+      - name: Analyze
+        working-directory: Frontend
+        run: flutter analyze --no-fatal-infos || true
+
+  # ── Build APK Job ───────────────────────────────────────────
+  build-apk:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '17'
+          cache: 'gradle' # Optimizes Gradle dependency caching for fast Android builds
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        working-directory: Frontend
+        run: flutter pub get
+
+      - name: Build APK (Debug)
+        working-directory: Frontend
+        run: flutter build apk --debug
+
+      - name: Upload APK Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: Frontend/build/app/outputs/flutter-apk/app-debug.apk
+          retention-days: 1 # Extremely short retention to save space and prevent quota issues
+
+  # ── Build & Deploy Web Job ──────────────────────────────────
+  build-web:
+    name: Build & Deploy Web
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: lint
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        working-directory: Frontend
+        run: flutter pub get
+
+      - name: Build Web
+        working-directory: Frontend
+        run: flutter build web
+
+      # Deploy to GitHub Pages (Only on pushes to master)
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: bluefireteam/flutter-gh-pages@v7
+        with:
+          baseHref: /Welcome-Login-Signup-Page-Flutter/
+          workingDir: Frontend
