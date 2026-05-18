@@ -44,12 +44,11 @@ jobs:
         working-directory: Frontend
         run: flutter analyze --no-fatal-infos || true
 
-  # ── Build APK Job ───────────────────────────────────────────
+  # ── Build APK Job (parallel with lint) ──────────────────────
   build-apk:
     name: Build Android APK
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: lint
 
     steps:
       - name: Checkout code
@@ -60,7 +59,7 @@ jobs:
         with:
           distribution: 'oracle'
           java-version: '17'
-          cache: 'gradle' # Optimizes Gradle dependency caching for fast Android builds
+          cache: 'gradle'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -82,37 +81,4 @@ jobs:
         with:
           name: debug-apk
           path: Frontend/build/app/outputs/flutter-apk/app-debug.apk
-          retention-days: 1 # Extremely short retention to save space and prevent quota issues
-
-  # ── Build & Deploy Web Job ──────────────────────────────────
-  build-web:
-    name: Build & Deploy Web
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    needs: lint
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
-
-      - name: Get dependencies
-        working-directory: Frontend
-        run: flutter pub get
-
-      - name: Build Web
-        working-directory: Frontend
-        run: flutter build web
-
-      # Deploy to GitHub Pages (Only on pushes to master)
-      - name: Deploy to GitHub Pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        uses: bluefireteam/flutter-gh-pages@v7
-        with:
-          baseHref: /Welcome-Login-Signup-Page-Flutter/
-          workingDir: Frontend
+          retention-days: 1
