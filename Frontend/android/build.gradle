@@ -1,3 +1,8 @@
+plugins {
+    id "com.android.application" apply false
+    id "org.jetbrains.kotlin.android" apply false
+}
+
 allprojects {
     repositories {
         google()
@@ -13,6 +18,61 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
+subprojects { project ->
+    def configureNamespace = { p ->
+        def android = p.extensions.findByName("android")
+        if (android != null) {
+            // Inject namespace if missing
+            if (android.namespace == null) {
+                def manifestFile = p.file("src/main/AndroidManifest.xml")
+                if (manifestFile.exists()) {
+                    def manifest = new XmlParser().parse(manifestFile)
+                    def packageVal = manifest.attribute("package")
+                    if (packageVal != null) {
+                        android.namespace = packageVal
+                    }
+                }
+            }
+        }
+    }
+
+    project.plugins.withId("com.android.application") {
+        configureNamespace(project)
+    }
+
+    project.plugins.withId("com.android.library") {
+        configureNamespace(project)
+    }
+
+    def configureKotlinTarget = { p ->
+        def android = p.extensions.findByName("android")
+        if (android != null) {
+            def javaVersion = android.compileOptions.sourceCompatibility
+            if (javaVersion != null) {
+                android.kotlinOptions {
+                    jvmTarget = javaVersion.toString()
+                }
+            }
+        }
+    }
+
+    project.plugins.withId("kotlin-android") {
+        if (project.state.executed) {
+            configureKotlinTarget(project)
+        } else {
+            project.afterEvaluate { configureKotlinTarget(project) }
+        }
+    }
+
+    project.plugins.withId("org.jetbrains.kotlin.android") {
+        if (project.state.executed) {
+            configureKotlinTarget(project)
+        } else {
+            project.afterEvaluate { configureKotlinTarget(project) }
+        }
+    }
+}
+
 tasks.register("clean", Delete) {
-    delete rootProject.buildDir
+    delete rootProject.layout.buildDirectory
 }
