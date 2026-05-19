@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -92,12 +91,10 @@ class _MapScreenState extends State<MapScreen>
     if (routeName != null) {
       final coords = _routeCoords[routeName];
       if (coords != null && coords.isNotEmpty) {
-        double avgLat =
-            coords.map((e) => e.latitude).reduce((a, b) => a + b) /
-                coords.length;
-        double avgLng =
-            coords.map((e) => e.longitude).reduce((a, b) => a + b) /
-                coords.length;
+        double avgLat = coords.map((e) => e.latitude).reduce((a, b) => a + b) /
+            coords.length;
+        double avgLng = coords.map((e) => e.longitude).reduce((a, b) => a + b) /
+            coords.length;
         _mapController.move(LatLng(avgLat, avgLng), 13.0);
       }
     }
@@ -165,8 +162,8 @@ class _MapScreenState extends State<MapScreen>
                       return Marker(
                         width: 120,
                         height: 55,
-                        point: LatLng(stop['lat'] as double,
-                            stop['lng'] as double),
+                        point: LatLng(
+                            stop['lat'] as double, stop['lng'] as double),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -387,8 +384,8 @@ class _MapScreenState extends State<MapScreen>
                 GestureDetector(
                   onTap: () {
                     _mapController.move(
-                        LatLng(locationProvider.userLat,
-                            locationProvider.userLng),
+                        LatLng(
+                            locationProvider.userLat, locationProvider.userLng),
                         14.0);
                   },
                   child: Container(
@@ -783,7 +780,8 @@ class _MapScreenState extends State<MapScreen>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.auto_mode_rounded, size: 16, color: Colors.white),
+              const Icon(Icons.auto_mode_rounded,
+                  size: 16, color: Colors.white),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
