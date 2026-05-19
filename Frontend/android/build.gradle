@@ -43,32 +43,22 @@ subprojects { project ->
     project.plugins.withId("com.android.library") {
         configureNamespace(project)
     }
+}
 
-    def configureKotlinTarget = { p ->
-        def android = p.extensions.findByName("android")
-        if (android != null) {
-            def javaVersion = android.compileOptions.sourceCompatibility
-            if (javaVersion != null) {
-                android.kotlinOptions {
-                    jvmTarget = javaVersion.toString()
+gradle.taskGraph.whenReady { taskGraph ->
+    subprojects { p ->
+        if (p.plugins.hasPlugin("com.android.application") || p.plugins.hasPlugin("com.android.library")) {
+            def android = p.extensions.findByName("android")
+            if (android != null) {
+                def javaVersion = android.compileOptions.sourceCompatibility
+                if (javaVersion != null) {
+                    p.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+                        kotlinOptions {
+                            jvmTarget = javaVersion.toString()
+                        }
+                    }
                 }
             }
-        }
-    }
-
-    project.plugins.withId("kotlin-android") {
-        if (project.state.executed) {
-            configureKotlinTarget(project)
-        } else {
-            project.afterEvaluate { configureKotlinTarget(project) }
-        }
-    }
-
-    project.plugins.withId("org.jetbrains.kotlin.android") {
-        if (project.state.executed) {
-            configureKotlinTarget(project)
-        } else {
-            project.afterEvaluate { configureKotlinTarget(project) }
         }
     }
 }
