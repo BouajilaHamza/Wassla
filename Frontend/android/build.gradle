@@ -1,0 +1,68 @@
+plugins {
+    id "com.android.application" apply false
+    id "org.jetbrains.kotlin.android" apply false
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
+subprojects { project ->
+    def configureNamespace = { p ->
+        def android = p.extensions.findByName("android")
+        if (android != null) {
+            // Inject namespace if missing
+            if (android.namespace == null) {
+                def manifestFile = p.file("src/main/AndroidManifest.xml")
+                if (manifestFile.exists()) {
+                    def manifest = new XmlParser().parse(manifestFile)
+                    def packageVal = manifest.attribute("package")
+                    if (packageVal != null) {
+                        android.namespace = packageVal
+                    }
+                }
+            }
+        }
+    }
+
+    project.plugins.withId("com.android.application") {
+        configureNamespace(project)
+    }
+
+    project.plugins.withId("com.android.library") {
+        configureNamespace(project)
+    }
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    subprojects { p ->
+        if (p.plugins.hasPlugin("com.android.application") || p.plugins.hasPlugin("com.android.library")) {
+            def android = p.extensions.findByName("android")
+            if (android != null) {
+                def javaVersion = android.compileOptions.sourceCompatibility
+                if (javaVersion != null) {
+                    p.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+                        kotlinOptions {
+                            jvmTarget = javaVersion.toString()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.layout.buildDirectory
+}

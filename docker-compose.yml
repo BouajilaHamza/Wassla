@@ -1,0 +1,34 @@
+services:
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: wassla_frontend
+    ports:
+      - "9080:9080"
+      - "9081:9081"
+    volumes:
+      - ./Frontend:/app
+    environment:
+      - CHROME_EXECUTABLE=/usr/bin/google-chrome
+    # Pass environment variables to Flutter as dart-defines if needed
+    command: flutter run -d web-server --web-hostname 0.0.0.0 --web-port 9080 --dds-port 9081 --pid-file /tmp/flutter.pid
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    mem_limit: 4G
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wassla_backend
+    ports:
+      - "9095:8080"
+    volumes:
+      - ./backend:/backend
+    restart: unless-stopped
